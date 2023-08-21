@@ -1,0 +1,13 @@
+<p-dialog [(visible)]="showAlert" [style]="{width: '40vw'}" [baseZIndex]="10000" [draggable]="false"
+    [resizable]="false">
+    <p-header>
+        {{alertHeader}}
+    </p-header>
+    <i class="pi pi-check" *ngIf="alertType == allAlertType.Message"> </i>
+    <i *ngIf="alertType == allAlertType.Warning">Warning</i>
+    <i *ngIf="alertType == allAlertType.Error">Error</i>
+    {{alertBody}}
+    <p-footer>
+        <p-button (click)="closeClick()" label="Ok" styleClass="p-button-text"></p-button>
+    </p-footer>
+</p-dialog>

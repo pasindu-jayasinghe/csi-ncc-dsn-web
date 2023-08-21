@@ -1,0 +1,170 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+        <h4>Data Request Audit</h4>
+        <hr />
+    </div>
+
+
+    <div class="row">
+        <div class="col-4">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">Feature</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown [options]="featureList" [(ngModel)]="selectedFeature" [showClear]="true"
+                        placeholder="Select .." optionLabel="name">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 ">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">User</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown name="freqDD" placeholder="Select .." optionLabel="firstName" [options]="userList"
+                        [(ngModel)]="selectedUser" [showClear]="true">
+                        <ng-template let-item pTemplate="item">
+                            {{item.value.title}} {{item.value.firstName}} {{item.value.lastName}}
+                        </ng-template>
+
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{item.value.title}} {{item.value.firstName}} {{item.value.lastName}}
+                        </ng-template>
+                    </p-dropdown>
+
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-4">
+
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                        styleClass="p-button-warn"></button>
+                </div>
+
+            </div>
+
+        </div> -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-4">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">From</label>
+                </div>
+                <div class="col-8">
+
+                    <p-calendar name="pdcCalender" showButtonBar="true" [(ngModel)]="fromDate" [showIcon]="true"
+                        dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="2010:2030"
+                        [readonlyInput]="true">
+
+                    </p-calendar>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">To</label>
+                </div>
+                <div class="col-8">
+
+                    <p-calendar name="pdcCalender" showButtonBar="true" [(ngModel)]="toDate" [showIcon]="true"
+                        dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="2010:2030"
+                        yearRange="2010:2030" [readonlyInput]="true">
+                    </p-calendar>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mt-10">
+            <button type="button" pButton pRipple icon="pi pi-search" (click)="search()"
+                styleClass="p-button-warn"></button>
+        </div>
+
+        <!-- <div class="col-4">
+
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                        styleClass="p-button-warn"></button>
+                </div>
+
+            </div>
+
+        </div> -->
+    </div>
+
+    <div>
+        <p-table [value]="items" dataKey="id" [lazy]="true" (onLazyLoad)="loadAuditDetails($event)" [paginator]="true"
+            [rows]="pagePerRow" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <!-- <th style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th> -->
+                    <th>Date Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Note</th>
+                    <th>Information</th>
+                    <th>Location</th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-a>
+                <tr>
+                    <!-- <td>
+                        <p-tableCheckbox *ngIf="pld.dataRequestStatus.id == 1" [value]="pld"></p-tableCheckbox>
+                    </td> -->
+                    <td tooltipPosition="top" class="tbl-cell-description">
+                        {{a.createdOn | date: 'yyyy-MM-dd HH:mm'}}</td>
+                    <td tooltipPosition="top" class="text-wrap text-break">
+                        {{a.user.title}} {{a.user.firstName}} {{a.user.lastName}}
+                    </td>
+                    <td tooltipPosition="top" class="tbl-cell-description">
+                        {{a.statusText}}
+                    </td>
+
+                    <td tooltipPosition="top" class="text-wrap text-break">
+                        {{a.comment}}
+                    </td>
+
+                    <td tooltipPosition="top" class="tbl-cell-description">
+                        <div class="text-wrap text-break">
+                            {{a.itemDetails}}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div>
+                            {{a.parameterLocation?.isNational ? "National" : ""}}
+                            {{a.parameterLocation?.province? "Province: "+ a.parameterLocation?.province?.name : ""}}
+                            {{a.parameterLocation?.district? "District: "+ a.parameterLocation?.district?.name : ""}}
+                            {{a.parameterLocation?.parameterLocation?.divisionalSecretariat? "D.S: "+
+                            a.parameterLocation?.divisionalSecretariat?.name : ""}}
+                        </div>
+
+
+                    </td>
+
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="text-warning d-flex justify-content-center"
+            *ngIf="items == undefined || items == null || items.length==0">
+            No values to display here
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,65 @@
+<div>
+    <div *ngIf="showUpload">
+        <div class="text-warning">
+            Note: 
+            <br/>
+            <!-- 1. Files having more than one period (.) in the file name or having extensions ".exe", ".com", ".bat" or ".dll" are not allowed  to be uploaded. -->
+            1. File with .xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt,.pdf,.png,.jpeg,.gif,.jpg,.avi and .mp4 extentions are allowed to upload.
+            <br/>
+            2. You may be prosecuted by law if illegal, obscene, derogatory or political content is uploaded to this platform.
+        </div>
+        <p-fileUpload name="file" [disabled]="isNew" (uploadHandler)="myUploader($event)" [auto]="true"
+            chooseLabel="Browse" accept=".xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt,.pdf,.png,.jpeg,.gif,.jpg,.avi,.mp3,.mp4" (onUpload)="onUploadComplete($event)" (onError)="onError($event)" [url]="uploadURL">
+
+            <ng-template pTemplate="content">
+                <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                </ul>
+            </ng-template>
+        </p-fileUpload>
+    </div>
+
+    <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+    </p-confirmDialog>
+
+    <p-table [value]="doucmentList" [lazy]="true" (onLazyLoad)="loadDocments($event)" [paginator]="false"
+        [loading]="loading" scrollHeight="10px">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>File Name</th>
+                <th></th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-doc>
+            <tr>
+                <td>{{doc.fileName}}</td>
+                <td>
+                    <div>
+
+                        <a [href]="doc.url" class="p-button p-component p-button-icon-only mr-10" icon="pi pi-download"
+                            pButton ng-reflect-icon="pi pi-download" target="_blank"></a>
+
+                        <!-- <button pButton type="button" icon="pi pi-download" ng-reflect-icon="pi pi-download"
+                            class="p-button p-component p-button-icon-only " href="https://google.com"
+                            target="_blank"></button> -->
+
+
+                        <button *ngIf="showDeleteButton" type="button" icon="pi pi-times" pButton
+                            ng-reflect-icon="pi pi-times" class="p-button p-component p-button-icon-only "
+                            (click)="deleteConfirm(doc)"></button>
+                    </div>
+                </td>
+
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,126 @@
+customSB {
+    .sidebar {
+        min-width: 230px;
+    }
+}
+
+::ng-deep div.tbl-cell-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+::ng-deep .tbl-cell-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+::ng-deep p-dropdown:not(.ignore-ellipsis) > div > span{
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; 
+    display: unset !important;
+    margin-right: 20px !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+::ng-deep .p-paginator .p-dropdown {
+    height: 48px !important;
+}
+
+::ng-deep button.custom-btn-info {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+::ng-deep .custom-btn-info > span {
+    font-size: 0.7rem !important;
+}
+
+::ng-deep .btn-shopping-cart > .p-button-label {
+    font-size: 15px !important;
+}
+
+::ng-deep .btn-shopping-cart > .p-button-icon {
+    font-size: 32px !important;
+}
+
+::ng-deep .sample-data-value-txt {
+    color: #2196F3 !important;
+}
+
+::ng-deep .custom-dialog-content {
+    max-height: 250px !important;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+::ng-deep .p-cell-editing {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+  
+::ng-deep .tbl-hdr-cell-small {
+    padding: 0.5rem 0.1rem !important;
+}
+  
+::ng-deep .tbl-cell-small {
+    padding: 0.1rem 0.1rem !important;
+}
+  
+::ng-deep .editable-cell-input {
+    width: 90% !important;
+    height: 30px !important;
+}
+
+::ng-deep p-inputnumber > span > span {
+    height: 48px !important;
+}
+
+::ng-deep p-inputnumber > span > input {
+    height: 48px !important;
+    width: 100% !important;
+}
+
+::ng-deep p-inputnumber > span {
+    width: 100% !important;
+}
+
+::ng-deep p-inputnumber.editable-cell-input > span > span {
+    height: 30px !important;
+}
+
+::ng-deep p-inputnumber.editable-cell-input > span > input {
+    height: 30px !important;
+}
+
+::ng-deep .editable-cell-input-div {
+    padding-right: 2px !important;
+    // padding-left: 5px !important;
+}
+
+::ng-deep .p-dropdown.editable-cell-select{
+    width: 90% !important;
+    height: 30px !important;
+}
+
+::ng-deep .p-dropdown.editable-cell-full-width-select{
+    width: 100% !important;
+    height: 30px !important;
+}
+
+::ng-deep .p-toast-message-custom {
+    .p-toast-message-icon {
+        display: none !important;
+    }
+}
+
+::ng-deep .p-dialog-title {
+    width: 100%;
+}
+
+::ng-deep .icon-not-visible {
+    display: none !important;
+}

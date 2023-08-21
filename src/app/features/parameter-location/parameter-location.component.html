@@ -1,0 +1,317 @@
+<div data-single-location *ngIf="paramter.dataCollectionLocation == 1">
+    <!-- ParameterDataCollectionLocation.Single -->
+    <div *ngIf="this.paramter.dataCollectionGeography == 1">
+        The paramter data collection is for Nationa level.
+    </div>
+    <div *ngIf="this.paramter.dataCollectionGeography == 5">
+        Specify the location input box
+    </div>
+    <div *ngIf="this.paramter.dataCollectionGeography == 2">
+        <!-- Province data collection -->
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Province *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchProvinceDropdown" [options]="provinces" [(ngModel)]="singleLocationProvince"
+                    #fprovince="ngModel" [showClear]="true" placeholder="Select .." optionLabel="name"
+                    styleClass="custom"></p-dropdown>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.province.id  && (fData.submitted || fprovince.touched || fprovince.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 3">
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">District </label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchDDropdown" [options]="districts" [(ngModel)]="singleLocationDistrict"
+                    #fdistricts="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!districts || districts.length == 0" placeholder="Select .." optionLabel="name">
+                </p-dropdown>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.district.id  && (fData.submitted || fdistricts.touched || fdistricts.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 4">
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">D.S </label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchDSDropdown" [options]="divisionalSecretariats" [(ngModel)]="singleLocationDS"
+                    #fdistricts="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!divisionalSecretariats || divisionalSecretariats.length == 0" placeholder="Select .."
+                    optionLabel="name"></p-dropdown>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.divisionalSecretariat.id  && (fData.submitted || fdistricts.touched || fdistricts.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div *ngIf="paramter.dataCollectionLocation == 2">
+    <!-- paramter.dataCollectionLocation == ParameterDataCollectionLocation.All -->
+    <!-- <div *ngIf="this.paramter.dataCollectionGeography == 1">
+        Nationa data collection
+    </div> -->
+    <div *ngIf="this.paramter.dataCollectionGeography == 2">
+        <!-- Province data collection -->
+        <!-- All Province data collection  -->
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Province *</label>
+            </div>
+            <div class="col-4">
+
+                <p-listbox [options]="provinces" [(ngModel)]="selectedProvincesAllSelected" [multiple]="true"
+                    optionLabel="name" [metaKeySelection]="false" [checkbox]="true" [filter]="true" [readonly]="true"
+                    [listStyle]="{'max-height':'250px'}"></p-listbox>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.province.id  && (fData.submitted || fprovince.touched || fprovince.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 3">
+        <!-- All District data collection  -->
+        <div *ngIf="this.paramter.dataCollectionGeography == 3">
+            <!-- District data collection -->
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">District </label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="districts" [(ngModel)]="selectedDistrictsAllSelected" [multiple]="true"
+                        optionLabel="name" [metaKeySelection]="false" [checkbox]="true" [filter]="true"
+                        [readonly]="true" [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 4">
+        <!-- All DivisionalSecretariat data collection -->
+        <div *ngIf="this.paramter.dataCollectionGeography == 4">
+            <!-- DivisionalSecretariat data collection -->
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">D.S </label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="divisionalSecretariats"
+                        [(ngModel)]="SelecteddivisionalSecretariatsAllSelected" [multiple]="true" optionLabel="name"
+                        [metaKeySelection]="false" [checkbox]="true" [filter]="true" [readonly]="true"
+                        [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div data-multiple-location *ngIf="paramter.dataCollectionLocation == 3">
+    <!-- paramter.dataCollectionLocation == ParameterDataCollectionLocation.Multiple -->
+    <div *ngIf="this.paramter.dataCollectionGeography == 1">
+        <!-- Nationa data collection -->
+    </div>
+    <div *ngIf="this.paramter.dataCollectionGeography == 5" class="ml-3">
+
+        <input type="text" name="name" maxlength="256" class="form-control input-lg col-4" autocomplete="off"
+            [(ngModel)]="paramter.locationName" #fn="ngModel" placeholder="Enter the location name" />
+        <p class="info-message text-danger" *ngIf="!paramter.locationName">
+            This is a mandatory field</p>
+
+    </div>
+    <div *ngIf="this.paramter.dataCollectionGeography == 2">
+        <!-- Province data collection -->
+        <!-- All Province data collection  -->
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Select Province(s) *</label>
+            </div>
+            <div class="col-4">
+
+                <p-listbox [options]="provinces" [(ngModel)]="selectedProvincesSelected" [multiple]="true"
+                    optionLabel="name" [metaKeySelection]="false" [checkbox]="true" [filter]="true"
+                    [listStyle]="{'max-height':'250px'}"></p-listbox>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.province.id  && (fData.submitted || fprovince.touched || fprovince.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Selected {{selectedProvincesSelected.length}} Province(s)*</label>
+            </div>
+            <div class="col-4">
+
+                <p-listbox [options]="selectedProvincesSelected" [(ngModel)]="selectedProvincesSelected"
+                    [multiple]="true" optionLabel="name" [metaKeySelection]="false" [filter]="true" [readonly]="true"
+                    [listStyle]="{'max-height':'250px'}"></p-listbox>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!institution.province.id  && (fData.submitted || fprovince.touched || fprovince.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 3">
+        <!-- All District data collection  -->
+        <div *ngIf="this.paramter.dataCollectionGeography == 3">
+            <!-- District data collection -->
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">Select District(s) * </label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="districts" [(ngModel)]="selectedDistrictsSelected" [multiple]="true"
+                        optionLabel="name" [metaKeySelection]="false" [checkbox]="true" [filter]="true"
+                        [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">Selected {{selectedDistrictsSelected.length}} District(s)*</label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="selectedDistrictsSelected" [(ngModel)]="selectedDistrictsSelected"
+                        [multiple]="true" optionLabel="name" [metaKeySelection]="false" [filter]="true"
+                        [readonly]="true" [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="this.paramter.dataCollectionGeography == 4">
+        <!-- All DivisionalSecretariat data collection -->
+        <div *ngIf="this.paramter.dataCollectionGeography == 4">
+            <!-- DivisionalSecretariat data collection -->
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">Select Divisional Secretariat(s)*</label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="divisionalSecretariats" [(ngModel)]="SelecteddivisionalSecretariatsSelected"
+                        [multiple]="true" optionLabel="name" [metaKeySelection]="false" [checkbox]="true"
+                        [filter]="true" [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+                <div class="col-2 d-flex align-items-center">
+                    <label class="font-weight-bold">Selected {{SelecteddivisionalSecretariatsSelected.length}}
+                        D.S(s)*</label>
+                </div>
+                <div class="col-4">
+                    <p-listbox [options]="SelecteddivisionalSecretariatsSelected"
+                        [(ngModel)]="SelecteddivisionalSecretariatsSelected" [multiple]="true" optionLabel="name"
+                        [metaKeySelection]="false" [readonly]="true" [filter]="true"
+                        [listStyle]="{'max-height':'250px'}"></p-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="col-12">
+    <button
+        [disabled]="( paramter.dataCollectionGeography == 5 && !paramter.locationName) ||(isUpdatingLocations || paramter.dataCollectionGeography == 1   && paramterLocations.length > 0) "
+        class="btn btn-primary btn-block offset-9  col-3 text-uppercase" type="button" (click)="updateLocations()">Save
+        Location(s)</button>
+</div>
+<div *ngIf="!paramterLocations || paramterLocations.length == 0" class="m-4 text-warning">
+    Save Location(s) to setup the Data Source(s)
+</div>
+<div class="mt-4">
+    <h4>Data Source Setup</h4>
+    <hr />
+</div>
+<div class="mt-4 mb-4 pl-4"
+    *ngIf="true || this.paramter.dataCollectionGeography == 2 || this.paramter.dataCollectionGeography == 3 || this.paramter.dataCollectionGeography == 4">
+    <p-radioButton name="bolkds" value="0" [(ngModel)]="bulkDatasourceAllocation"
+        label="Select Data Sources One by One">
+    </p-radioButton>
+    <p-radioButton name="bolkds" class="ml-4" value="1" [(ngModel)]="bulkDatasourceAllocation"
+        label="Same Data Source for All Locations"></p-radioButton>
+    <div *ngIf="bulkDatasourceAllocation == '1'" class="mt-4 col-3  pl-0">
+        <div>
+            <p-dropdown name="institution" [options]="allInstitutions" [(ngModel)]="bulkDatasourceAllocationDataSource"
+                optionLabel="name" optionValue="id" [filter]="true" placeholder="Select .."></p-dropdown>
+        </div>
+        <div class="mt-4">
+            <button [disabled]="!bulkDatasourceAllocationDataSource?.id"
+                class="btn btn-primary btn-block  text-uppercase" type="button" (click)="updateLocationSourceAll()">Save
+                Source for ({{totalRecords}}) Location(s)</button>
+        </div>
+    </div>
+
+
+</div>
+<div class="col-12">
+    <p-table [value]="paramterLocations" [lazy]="true" (onLazyLoad)="load($event)" [paginator]="true" [rows]="rows"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Parameter Name</th>
+                <!-- <th>Description</th> -->
+                <!-- <th>Project/Programme</th> -->
+                <th *ngIf="this.paramter.dataCollectionGeography == 1 || this.paramter.dataCollectionGeography == 5">
+                    Location</th>
+                <th *ngIf="this.paramter.dataCollectionGeography == 2">Province</th>
+                <th *ngIf="this.paramter.dataCollectionGeography == 3">District</th>
+                <th *ngIf="this.paramter.dataCollectionGeography == 4">D.S</th>
+                <th>Data Source</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-parameterLocation>
+            <tr>
+                <td pTooltip="{{parameterLocation.parameter.name}}" tooltipPosition="top" class="tbl-cell-description">
+                    {{parameterLocation.parameter.name}}</td>
+                <td *ngIf="this.paramter.dataCollectionGeography == 1">{{parameterLocation.isNational ? "National" :
+                    ""}}</td>
+                <td *ngIf="this.paramter.dataCollectionGeography == 5">Specific Location</td>
+                <!-- <td>{{parameter.projectType?.name}}</td> -->
+                <td *ngIf="this.paramter.dataCollectionGeography == 2">{{parameterLocation.province?.name}}</td>
+                <td *ngIf="this.paramter.dataCollectionGeography == 3">{{parameterLocation.district?.name}}</td>
+                <td *ngIf="this.paramter.dataCollectionGeography == 4">{{parameterLocation.divisionalSecretariat?.name}}
+                </td>
+                <td>
+                    <div>
+                        <p-dropdown name=" institution" [options]="allInstitutions"
+                            [(ngModel)]="parameterLocation.dataSource" optionLabel="name" optionValue="id"
+                            [filter]="true" placeholder="Select .."
+                            (onChange)="dataSourceChnages(true)"></p-dropdown>
+                        <p class="info-message text-warning mb-0" *ngIf="!parameterLocation.dataSource?.id">
+                            This is a required field, in order to perform data request.</p>
+                    </div>
+                </td>
+                <td>
+                    <!-- <button pButton type="button" (click)="edit(parameter)" label="Edit"
+                        class="p-button-link"></button> -->
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>
+<div class="col-12 mt-4 d-flex">
+
+    <!-- <button  class="btn mt-7 btn-secondary col-1 btn-block text-uppercase" type="button" (click)="onBackClick()">Back.</button> -->
+
+    <button class="btn btn-secondary btn-block   col-1 text-uppercase" type="button"
+        (click)="onBackClick()">Back</button>
+    <button *ngIf="bulkDatasourceAllocation == '0'" [disabled]="!enableSaveSources"
+    class="btn btn-primary btn-block  offset-8 col-3 text-uppercase"
+        type="button" (click)="updateLocationSource()">Save Source(s)</button>
+</div> 
+
+<app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert>

@@ -1,0 +1,277 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+        <div class="d-flex">
+            <div class="mr-auto p-2">
+                <h4>Data Entry Requests</h4>
+            </div>
+            <div class="justify-content-end mt-2" *ngIf="institution && loginUser">
+                <button class="btn btn-primary text-uppercase" (click)="onClickInputData()">Input Data</button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="row">
+
+        <div hidden class="col-3 pl-0">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">Institution</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown name="instDD" [disabled]="institutionListDisabled" [options]="institutionList"
+                        placeholder="Select .." optionLabel="name" [(ngModel)]="institution"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div hidden class="col-3">
+            <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                <div class="col-4 d-flex align-items-center">
+                    <label class="font-weight-bold">User</label>
+                </div>
+                <div class="col-8">
+                    <p-dropdown name="freqDD" [disabled]="isDEO" placeholder="Select .." optionLabel="firstName"
+                        [options]="userList" [(ngModel)]="loginUser">
+                        <ng-template let-item pTemplate="item">
+                            {{item.value.title}} {{item.value.firstName}} {{item.value.lastName}}
+                        </ng-template>
+
+                        <ng-template let-item pTemplate="selectedItem">
+                            {{item.value.title}} {{item.value.firstName}} {{item.value.lastName}}
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div hidden class="mt-10 col-3">
+            <button type="button" pButton pRipple icon="pi pi-search" (click)="searchParameter()"
+                styleClass="p-button-warn"></button>
+        </div>
+
+
+
+    </div>
+    <!-- <div class="mb-4">
+        <h5>Parameters</h5>
+        <hr />
+    </div> -->
+    <div class="d-flex flex-row justify-content-start">
+        <!-- <div class="d-flex col-3 justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Frequancy</label>
+            </div>
+            <div class="col-8 flex-wrap">
+                <p-dropdown name="freqDD" [options]="frequencyList" [(ngModel)]="selectedFrequency"
+                    placeholder="Select .." optionLabel="firstName" [showClear]="true">
+                </p-dropdown>
+                <p class="info-message text-danger" *ngIf="userRequired"> This is a mandatory field</p>
+            </div>
+        </div> -->
+
+        <!-- <div class="d-flex col-3  justify-content-start align-content-center flex-wrap mb-15">
+
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Deadline</label>
+            </div>
+            <div class="col-8 flex-wrap">
+                <p-calendar name="dlCalender" showButtonBar="true" [(ngModel)]="deadline" [showIcon]="true"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030" [readonlyInput]="true">
+                </p-calendar>
+                <p class="info-message text-danger" *ngIf="deadlineRequired"> This is a mandatory field</p>
+            </div>
+
+        </div> -->
+
+        <div class="d-flex col-12  justify-content-start align-content-center flex-wrap mb-15 pl-0">
+            <div class="col-1 d-flex align-items-center pl-0">
+                <label class="font-weight-bold">Status</label>
+            </div>
+            <div class="col-2 flex-wrap">
+                <p-dropdown name="statusDD" [options]="statusList" [(ngModel)]="selectedStatus" placeholder="Select .."
+                    optionLabel="name" [showClear]="true">
+                </p-dropdown>
+                <!-- <p class="info-message text-danger" *ngIf="userRequired"> This is a mandatory field</p> -->
+            </div>
+            <div class="d-flex col-1 justify-content-start align-content-center flex-wrap ">
+                <button type="button" pButton pRipple icon="pi pi-search" (click)="searchParameter()"
+                    styleClass="p-button-warn"></button>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div>
+        <p-table [value]="parameterLocationData" dataKey="id" [lazy]="true" (onLazyLoad)="loadData($event)"
+            [paginator]="true" [rows]="rows" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <!-- <th style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th> -->
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Frequency</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <!-- <th>Data Type</th> -->
+                    <!-- <th>Com. Value</th> -->
+                    <!-- <th>Deadline</th> -->
+                    <th>Value</th>
+                    <th>Unit</th>
+                    <th>Content</th>
+                    <th *ngIf="loginUser?.userType.id == 3 ">Data Entry User</th>
+                    <th>Data Entry Deadline</th>
+                    <th>Status</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pld let-expanded="expanded">
+                <tr>
+                    <!-- <td>
+                        <p-tableCheckbox *ngIf="pld.dataRequestStatus.id == 1" [value]="pld"></p-tableCheckbox>
+                    </td> -->
+                    <td pTooltip="{{pld.parameter.name}}" tooltipPosition="top" class="tbl-cell-description">
+                        {{pld.parameter.name}}</td>
+                    <td pTooltip="{{pld.parameter.description}}" tooltipPosition="top" class="tbl-cell-description">
+                        {{pld.parameter.description}}</td>
+                    <td>
+                        {{pld.parameterLocation.isNational ? "National" : ""}}
+                        {{pld.parameterLocation.province? "Province: "+
+                        pld.parameterLocation.province?.name : ""}}
+                        {{pld.parameterLocation.district? "District: "+
+                        pld.parameterLocation.district?.name : ""}}
+                        {{pld.parameterLocation.divisionalSecretariat? "D.S: "+
+                        pld.parameterLocation.divisionalSecretariat?.name : ""}}
+
+                    </td>
+                    <td>{{pld.parameter.frequency?.name}}</td>
+                    <td>{{pld.startDate | date: 'yyyy-MM-dd'}}</td>
+                    <td>{{pld.endDate | date: 'yyyy-MM-dd'}}</td>
+                    <!-- <td>{{pld.parameter.isPublicData? 'free' : 'Commercial data'}}</td> -->
+                    <!-- <td>{{pld.parameter.commercialValue !== 0 ?pld.parameter.commercialValue + ".Rs" : ""}} </td> -->
+                    <!-- <td>{{pld.deadline | date: 'yyyy-MM-dd'}}</td> -->
+                    <td>
+                        <div pTooltip="{{pld.value  | number:'1.0-6'}}" class="d-flex"
+                            *ngIf="pld.parameter.parameterDataType?.id === 1">
+                            {{pld.value | number:'1.0-6'}}
+                        </div>
+                        <div class="d-flex text-right" *ngIf="pld.parameter.parameterDataType?.id !== 1"
+                            pTooltip="Not Applicable">
+                            N/A
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="pld.parameter.parameterDataType?.id === 1">
+                            {{pld.parameter.unitOfMeasure?.name}}
+                        </div>
+                        <div *ngIf="pld.parameter.parameterDataType?.id !== 1" pTooltip="Not Applicable">
+                            N/A
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ml-4"
+                            *ngIf="pld.parameter.parameterDataType && pld.parameter.parameterDataType?.id == 2">
+                            <button pButton pRipple type="button" icon="pi pi-info"
+                                class="p-button-rounded p-button-outlined custom-btn-info"
+                                (click)="showDataDialog(pld)"></button>
+                        </div>
+
+                        <div class="ml-4" *ngIf="pld.parameter.parameterDataType?.id !== 2" pTooltip="Not Applicable">
+                            N/A
+                        </div>
+
+                    </td>
+                    <td pTooltip="{{pld.dataEntryUser?.title}} {{pld.dataEntryUser?.firstName}}  {{pld.dataEntryUser?.LastName}}"
+                        tooltipPosition="top" class="tbl-cell-description" *ngIf="loginUser?.userType.id == 3 ">
+                        {{pld.dataEntryUser?.title}} {{pld.dataEntryUser?.firstName}} {{pld.dataEntryUser?.LastName}}
+                    </td>
+                    <td>{{pld.dataEnteryDeadline | date: 'yyyy-MM-dd'}}</td>
+                    <td>
+                        <div class="d-flex-row">
+                            <div class="justify-content-end">
+                                <p-button [label]="pld.dataRequestStatus?.name" styleClass="p-button-link"
+                                    (click)="onStatucClick(pld)"></p-button>
+                            </div>
+
+                            <div class="justify-content-end col-2 mt-3 align-self-center pl-4"
+                                *ngIf="pld.dataRequestStatus.id == 4">
+                                <button pButton pRipple type="button" icon="pi pi-info"
+                                    class="p-button-rounded btn-sm p-button-danger p-button-outlined "
+                                    (click)="onStatucClick(pld)"></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+        <div class="text-warning d-flex justify-content-center"
+            *ngIf="parameterLocationData == undefined || parameterLocationData == null || parameterLocationData.length==0">
+            No values to display here
+        </div>
+    </div>
+    <app-status-history-pop [showDetailEvent]="eventsSubject.asObservable()"></app-status-history-pop>
+
+</div>
+
+<p-dialog [(visible)]="displayDataDialog" [style]="{width: '55vw'}" [draggable]="false">
+    <p-header>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">Parameter Name:</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData?.parameter?.name}}
+            </div>
+        </div>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">Location</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData.parameterLocation?.isNational ? "National" : ""}}
+                {{selectedRowToDisplayData.parameterLocation?.province? "Province: "+
+                selectedRowToDisplayData.parameterLocation?.province?.name : ""}}
+                {{selectedRowToDisplayData.parameterLocation?.district? "District: "+
+                selectedRowToDisplayData.parameterLocation?.district?.name : ""}}
+                {{selectedRowToDisplayData.parameterLocation?.divisionalSecretariat? "D.S: "+
+                selectedRowToDisplayData.parameterLocation?.divisionalSecretariat?.name : ""}}
+            </div>
+        </div>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">From - To:</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData.startDate | date: 'yyyy-MM-dd'}} - {{selectedRowToDisplayData.endDate | date:
+                'yyyy-MM-dd'}}
+            </div>
+        </div>
+    </p-header>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="font-weight-bold">Content Comment</label>
+            <hr />
+            <div class="custom-dialog-content">{{selectedRowToDisplayData?.contentComment}}</div>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="selectedRowToDisplayData">
+        <div class="col-md-12">
+            <label class="font-weight-bold">Documents</label>
+            <hr />
+            <app-document-upload [(doucmentList)]="selectedRowToDisplayData.documentList"
+                [documentOwner]="documentsDocumentOwner" [documentOwnerId]="selectedRowToDisplayData.id" [isNew]="false"
+                [showUpload]="false">
+            </app-document-upload>
+        </div>
+    </div>
+    <p-footer>
+        <button pButton class="p-button-text" label="OK" (click)="displayDataDialog = false;"></button>
+    </p-footer>
+</p-dialog>
+<app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert>

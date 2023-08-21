@@ -1,0 +1,643 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+        <h4>{{isNew ? "Add" : "Edit" }} Project/Programme</h4>
+        <div class="text-warning d-flex justify-content-start mt-4" *ngIf="project.isPendingApprove == true">
+            <h6>
+                The project/programme is under pending approval.
+            </h6>
+        </div>
+        <hr />
+    </div>
+    <form #fData="ngForm" (ngSubmit)="saveForm(fData)" novalidate>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Project/Programme *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="projectType" [options]="projectProgrammeType"
+                    [(ngModel)]="selctedprojectProgrammeType" #projectType="ngModel" placeholder="Select .."
+                    optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!selctedprojectProgrammeType  && (fData.submitted || projectType.touched || projectType.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Data Source *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="fDataSource" [filter]="true" [options]="institutions" [(ngModel)]="project.dataSource"
+                    #fDataSource="ngModel" placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!project.dataSource?.id  && (fData.submitted || fDataSource.touched || fDataSource.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Name *</label>
+            </div>
+            <div class="col-8">
+                <input type="text" maxlength="256" name="name" class="form-control" [(ngModel)]="project.name" #fn="ngModel"
+                    placeholder="Enter name"  required [pattern]="'^[a-zA-Z0-9  ,-.]{1,256}$'" (change)="nameChange()" (ngModelChange)="onnameKeyDown($event)" />
+                <p class="info-message text-danger"
+                    *ngIf="fn.invalid  && (fData.submitted || fn.touched || fn.dirty)">
+                    This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                <p class="info-message text-danger mt-2"
+                    *ngIf="exsistingPrpject && (fData.submitted || fn.touched || fn.dirty)">
+                    Project/Programme already exists. Duplicate entries are not allowed.</p>
+            </div>
+        </div>
+        <div *ngIf="relatedItem !== undefined && relatedItem !== null && relatedItem?.length > 0"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Related Param</label> -->
+            </div>
+            <div class="col-8 mt-2">
+                <div mb-5 class="font-weight-bold font-italic"> Similar Project/Programme </div>
+                <h1></h1>
+                <div *ngFor="let p of relatedItem">
+                    {{p.name}}
+                    <a class="text-break font-weight-light ml-20" [routerLink]="['/project']" [queryParams]="{id: p.id}"
+                        target="_blank"> View</a>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Climate Change Data Category *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="chdcDD" [options]="climateChangeDataCategorys"
+                    [(ngModel)]="project.climateChangeDataCategory" #chdcDD="ngModel" placeholder="Select .."
+                    optionLabel="name" (onChange)="onChangeCCD()" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!project.climateChangeDataCategory?.id  && (fData.submitted || chdcDD.touched || chdcDD.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Sector *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="sectorDD" [options]="sectors" [(ngModel)]="project.sector" #Fsectors="ngModel"
+                    placeholder="Select .." optionLabel="name" (onChange)="onChangeSector()" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!project.sector?.id  && (fData.submitted || Fsectors.touched || Fsectors.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Sub Sector *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="subsctorDD" [options]="subSectors" [(ngModel)]="project.subSector"
+                    #subSectorsDD="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!subSectors || subSectors.length == 0" placeholder="Select .." optionLabel="name"
+                    required></p-dropdown>
+
+                <p class="info-message text-danger"
+                    *ngIf="!project.subSector?.id  && (fData.submitted || subSectorsDD.touched || subSectorsDD.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div> -->
+
+        <div class="mt-50">
+            <h6>General details</h6>
+            <hr />
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Project Type *</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="PtDD" [options]="projectTypes" [(ngModel)]="project.projectType"
+                            #FPype="ngModel" placeholder="Select .." optionLabel="name" required></p-dropdown>
+                        <p class="info-message text-danger"
+                            *ngIf="!project.projectType?.id  && (fData.submitted || FPype.touched || FPype.dirty)">
+                            This is a mandatory field</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Date of Commencement *</label>
+                    </div>
+                    <div class="col-8">
+                        <p-calendar name="pdcCalender" [(ngModel)]="proposedDate" #fpdcCalender="ngModel"
+                            showButtonBar="true" required [showIcon]="true" [monthNavigator]="true"
+                            dateFormat="yy-mm-dd" [yearNavigator]="true" yearRange="2000:2200">
+                        </p-calendar>
+
+                        <p class="info-message text-danger"
+                            *ngIf="!proposedDate  && (fData.submitted || fpdcCalender.touched || fpdcCalender.dirty)">
+                            This is a mandatory field</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Project Duration(Years)</label>
+                    </div>
+                    <div class="col-8">
+                        <p-inputNumber name="derationNUm" [(ngModel)]="project.projectDuration" [step]="0.5" [min]="1"
+                            [max]="100" mode="decimal" [minFractionDigits]="1" [showButtons]="true">
+                        </p-inputNumber>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Current status of the project *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="statusDD" [options]="status" [(ngModel)]="project.projectStatus" #Fstatus="ngModel"
+                    placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!project.projectStatus?.id  && (fData.submitted || Fstatus.touched || Fstatus.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Objective(s) of the project *</label>
+
+                    </div>
+                    <div class="col-8">
+                        <textarea name="descriptionTA" style="width:100%;" pInputTextarea class="form-control"
+                            [(ngModel)]="project.description"  [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" #fdescription="ngModel" [rows]="5" [cols]="30" required
+                            maxlength="2500"></textarea>
+                        <p class="info-message text-danger"
+                            *ngIf="fdescription.invalid  && (fData.submitted || fdescription.touched || fdescription.dirty)">
+                            Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                        <p class="info-message text-danger"
+                            *ngIf="!project.description  && (fData.submitted || fdescription.touched || fdescription.dirty)">
+                            This is a mandatory field</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Main components of the project</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea name="scopeTA" class="form-control" class="form-control" style="width:100%;"
+                            pInputTextarea [(ngModel)]="project.scope" [pattern]="'^[a-zA-Z0-9  ,-.]{0,1024}$'" #fscope="ngModel" [rows]="5" [cols]="30"
+                            maxlength="2500"></textarea>
+                            <p class="info-message text-danger"
+                            *ngIf="fscope.invalid  && (fData.submitted || fscope.touched || fscope.dirty)">
+                            Max length is limited to 1024 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-50">
+            <h6>Location</h6>
+            <hr />
+        </div>
+
+        <div class="row">
+            <div class="col">
+
+                <div class="col-3 d-flex align-content-center flex-wrap">
+                    <p-checkbox name="loccb1" (onChange)="isNationalChnage()" [binary]="true"
+                        [(ngModel)]="project.isNational"></p-checkbox>
+                    <label class="font-weight-bold ml-4 mt-2 align-self-center ">National</label>
+                </div>
+
+
+                <div class="col-3 d-flex align-content-center flex-wrap">
+                    <p-checkbox name="loccb2" (onChange)="isSLChnage()" [binary]="true"
+                        [(ngModel)]="project.isSpecificLocation"></p-checkbox>
+                    <label class="font-weight-bold ml-4 mt-2 align-self-center">Specific Locations</label>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf=" !project.isNational && !project.isSpecificLocation" class="row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Province</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="searchProvinceDropdown" [options]="provinces" [(ngModel)]="project.province"
+                            placeholder="Select .." optionLabel="name" [filter]="true" [showClear]="true"
+                            (onChange)="onChangeProvince()">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">District</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="searchDDropdown" [options]="districts" [(ngModel)]="project.district"
+                            placeholder="Select .." optionLabel="name" [filter]="true" [showClear]="true"
+                            (onChange)="onChangeDistrict()">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">D.S</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="searchDSDropdown" [options]="divisionalSecretariats"
+                            [(ngModel)]="project.divisionalSecretariat" [filter]="true" [showClear]="true"
+                            placeholder="Select .." optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap">
+                    <div class="col-12 d-flex align-items-center">
+                        <p class="info-message text-danger"
+                            *ngIf="(!project.province && !project.district && !project.divisionalSecretariat)  && (fData.submitted)">
+                            Location is mandatory</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Longitude</label>
+                    </div>
+                    <div class="col-8">
+                        <p-inputNumber name="longitudeNUm" [(ngModel)]="project.longitude" [step]="0.000001"
+                            [min]="-180" [max]="180" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="6"
+                            [showButtons]="true" (onInput)="onLongitudeChange($event)">
+                        </p-inputNumber>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Latitude</label>
+                    </div>
+                    <div class="col-8">
+                        <p-inputNumber name="latitudeNUm" [(ngModel)]="project.latitude" [step]="0.000001" [min]="-90"
+                            [max]="90" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="6"
+                            [showButtons]="true" (onInput)="onLatitudeChange($event)">
+                        </p-inputNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-8">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-2 d-flex align-items-center">
+                        <label class="font-weight-bold">Google Map</label>
+                    </div>
+
+                    <div class="col-10">
+                        <p-gmap #gmap [style]="{'width':'100%','height':'320px', 'margin-bottom': '1em'}"
+                            [options]="options" [overlays]="overlays" (onMapClick)="handleMapClick($event)"
+                            (onOverlayDragEnd)="handleMarkerDragEnd($event)"></p-gmap>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-50">
+            <h6>Outcomes/Results/Benefits/Progress</h6>
+            <hr />
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Project Outcomes</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea name="outcomes" class="form-control" class="form-control" style="width:100%;"
+                            pInputTextarea [(ngModel)]="project.outcomes" [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'"  #foutcomes="ngModel" [rows]="5" [cols]="30"
+                            maxlength="2500"></textarea>
+                            <p class="info-message text-danger"
+                            *ngIf="foutcomes.invalid  && (fData.submitted || foutcomes.touched || foutcomes.dirty)">
+                            Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">GHG Emission Reductions</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" maxlength="256" name="ghgEmission"  [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'"  class="form-control" [(ngModel)]="project.ghgEmissions"
+                            #ghgE="ngModel" placeholder="Enter Planned emission reduction of the project/programme" />
+                            <p class="info-message text-danger"
+                            *ngIf="ghgE.invalid  && (fData.submitted || ghgE.touched || ghgE.dirty)">
+                            Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Adaptation Benefits</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" maxlength="512" name="adaptationBenefits" class="form-control"
+                            [(ngModel)]="project.adaptationBenefits" [pattern]="'^[a-zA-Z0-9  ,-.]{0,512}$'" #ab="ngModel"
+                            placeholder="Enter Adaptation Benefits" />
+                            <p class="info-message text-danger"
+                            *ngIf="ab.invalid  && (fData.submitted || ab.touched || ab.dirty)">
+                            Max length is limited to 512 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Relevant Direct SD Benefits</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="rsdDD" [options]="sdBenefits" [(ngModel)]="project.directSDBenefit"
+                            #Frsd="ngModel" placeholder="Select .." optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Relevant Indirect SD Benefits</label>
+                    </div>
+                    <div class="col-8">
+                        <p-dropdown name="iSDBenift" [options]="sdBenefitsIndirect"
+                            [(ngModel)]="project.indirectSDBenefit" #iSDBenift="ngModel" placeholder="Select .."
+                            optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-50">
+            <h6>Stakeholders</h6>
+            <hr />
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Project Proponents *</label>
+            </div>
+            <div class="col-4">
+                <p-radioButton name="locgroupname" [value]="true" [(ngModel)]="project.isPublicProponent" label="Public"
+                    #frd="ngModel" required></p-radioButton>
+                <p-radioButton name="locgroupname1" class="ml-4" [value]="false" [(ngModel)]="project.isPublicProponent"
+                    label="Private" #frd="ngModel" required></p-radioButton>
+                <!-- <p class="info-message text-danger"
+                    *ngIf="!project.isPublicProponent  && (fData.submitted || frd.touched || frd.dirty)">
+                    This is a mandatory field</p> -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Project Proponent(s)</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" maxlength="256" name="projectProponents" class="form-control"
+                            [(ngModel)]="project.projectProponents" [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" #pProponents="ngModel"
+                            placeholder="Enter Project Proponents" />
+                            <p class="info-message text-danger"
+                    *ngIf="pProponents.invalid  && (fData.submitted || pProponents.touched || pProponents.dirty)">
+                    Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Implementing Entity/Entities</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" maxlength="256" name="implementingEntities" class="form-control"
+                            [(ngModel)]="project.implementingEntities" #implEnt="ngModel"
+                            [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" 
+                            placeholder="Enter Implementing Entities" />
+                            <p class="info-message text-danger"
+                    *ngIf="implEnt.invalid  && (fData.submitted || implEnt.touched || implEnt.dirty)">
+                    Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+                    <div class="col-4 d-flex align-items-center">
+                        <label class="font-weight-bold">Executing Entity</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" maxlength="256" name="executingEntity" class="form-control"
+                            [(ngModel)]="project.executingEntity" #exeEnt="ngModel"
+                            [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" 
+                            placeholder="Enter Executing Entity" />
+                            <p class="info-message text-danger"
+                            *ngIf="exeEnt.invalid  && (fData.submitted || exeEnt.touched || exeEnt.dirty)">
+                            Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Parties Involved</label>
+            </div>
+            <div class="col-4">
+                <textarea name="PITA" style="width:100%;" class="form-control" pInputTextarea
+                    [(ngModel)]="project.partiesInvolved" #fpi="ngModel" [rows]="5" [cols]="30" maxlength="2500"
+                    [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" 
+                    placeholder="Mention all the parties who will involve with the project. Government, non government agencies need to be mentioned to figured out the data providers for emission calculations."></textarea>
+                    <p class="info-message text-danger"
+                    *ngIf="fpi.invalid  && (fData.submitted || fpi.touched || fpi.dirty)">
+                    Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Beneficiaries</label>
+            </div>
+            <div class="col-4">
+                <input type="text" maxlength="256" name="beneficiaries"
+                [pattern]="'^[a-zA-Z0-9  ,-.]{0,256}$'" 
+                 class="form-control" [(ngModel)]="project.beneficiaries"
+                    #benefit="ngModel" placeholder="Enter Beneficiaries" />
+                    <p class="info-message text-danger"
+                    *ngIf="benefit.invalid  && (fData.submitted || benefit.touched || benefit.dirty)">
+                    Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+
+        <div class="mt-50">
+            <h6>Financial Background</h6>
+            <hr />
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Financing Scheme</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="fsDD" [options]="financingSchemes" [(ngModel)]="project.financingScheme"
+                    #Ffsd="ngModel" placeholder="Select .." optionLabel="name"></p-dropdown>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Donors</label>
+            </div>
+            <div class="col-4  d-flex align-content-center flex-wrap">
+                <p-checkbox name="publiccb" [binary]="true" [(ngModel)]="project.publicDonor"></p-checkbox>
+                <label class="font-weight-bold ml-4 align-self-center mb-0">Public</label>
+            </div>
+        </div>
+
+        <div class="d-flex  mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Donors</label> -->
+            </div>
+            <div class="col-4 d-flex align-content-center flex-wrap">
+                <p-checkbox name="privaccb" [binary]="true" [(ngModel)]="project.privateDonor"></p-checkbox>
+                <label class="font-weight-bold ml-4 align-self-center mb-0 ">Private</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Donors</label> -->
+            </div>
+            <div class="col-4  d-flex align-content-center flex-wrap">
+                <p-checkbox name="internationalccb" [binary]="true" [(ngModel)]="project.internationalDonor">
+                </p-checkbox>
+                <label class="font-weight-bold ml-4  align-self-center mb-0">International</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Donors</label> -->
+            </div>
+            <div class="col-4 d-flex align-content-center flex-wrap">
+                <p-checkbox name="ppccb" [binary]="true" [(ngModel)]="project.privatePublicDonor">
+                </p-checkbox>
+                <label class="font-weight-bold ml-4  align-self-center mb-0">Private Public Partnership</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Donors</label> -->
+            </div>
+            <div class="col-4  d-flex align-content-center flex-wrap">
+                <p-checkbox name="ngolccb" [binary]="true" [(ngModel)]="project.ngoDonor">
+                </p-checkbox>
+                <label class="font-weight-bold ml-4  align-self-center mb-0">NGO</label>
+            </div>
+        </div>
+
+        <div>
+            <app-project-funding-details [projectId]="projectId" [currencyList]="currencys">
+            </app-project-funding-details>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Total Project Cost</label>
+            </div>
+            <div class="col-4">
+                <div class="form-row">
+                    <div class="col-7">
+                        <p-inputNumber name="tpc" [(ngModel)]="project.totalProjectCost" [step]="0.01" [min]="0"
+                            [showButtons]="true" mode="decimal" [maxFractionDigits]="2" [minFractionDigits]="2"
+                            #tpc="ngModel" class="number-input">
+                        </p-inputNumber>
+                    </div>
+                    <div class="col-5">
+                        <p-dropdown name="tpcc" [options]="currencys" [(ngModel)]="project.totalProjectCostCurrency"
+                            #tpcc="ngModel" placeholder="Select .." optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-50">
+            <h6>Project Documents</h6>
+            <hr />
+            <div>
+                <p class="info-message text-warning offset-2 col-4" *ngIf="isNew">
+                    Document upload will enable after first Save.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap">
+            <div class="col-12 d-flex align-items-center">
+                <app-document-upload [doucmentList]="doucmentList" [documentOwner]="documentsDocumentOwner"
+                    [documentOwnerId]="documentsDocumentOwnerId" [documentOwnerId]="projectId" [isNew]="isNew"
+                    [showDeleteButton]="true">
+                </app-document-upload>
+            </div>
+        </div>
+
+        <div>
+            <p class="info-message text-danger offset-2 col-4" *ngIf="fData.submitted && !fData.valid">
+                One or more mandatory fields should be filled before save action.</p>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-4">
+            <div class=" col-4 d-flex justify-content-start">
+                <button class="btn btn-secondary btn-block text-uppercase col-6" (click)="onBackClick()">Back</button>
+            </div>
+            <div class="col-8 d-flex justify-content-end">
+                <div class="col-3 d-flex justify-content-end p-button-vertical ">
+                    <button class="btn bg-success  btn-block text-uppercase" type="button" (click)="onApproveClick()"
+                        *ngIf="!isNew && project.isPendingApprove == true && loginUser?.userType.id == 1">Approve</button>
+                </div>
+                <div class="col-3 d-flex justify-content-end p-button-vertical">
+                    <button class="btn btn-warning btn-block text-uppercase" type="button" (click)="onDeleteClick()"
+                        *ngIf="!isNew">Delete</button>
+                </div>
+                <div class="col-4 d-flex">
+                    <button [disabled]="isSaving" class="btn btn-primary btn-block text-uppercase btn-lg"
+                        type="submit">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- <app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert> -->

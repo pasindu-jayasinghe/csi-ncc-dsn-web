@@ -1,0 +1,39 @@
+Creating feature
+
+1. ng g module institution
+2. ng g component institutionList
+3. ng g component institutionForm
+
+
+4. Add routes @ app-routing.module.ts
+
+  { path: 'institution-ist', component: InstitutionListComponent },
+  { path: 'institution', component: InstitutionFormComponent },
+  
+  
+ 5. Add menu
+ 
+ 
+      <p-accordionTab>
+          <p-header
+            class="p-accordion-header-text d-flex flex-row align-items-center"
+          >
+            <i class="cash-icon icon-32x24 mr-20"></i>
+            <div
+              [routerLink]="['/institution-list']"
+              routerLinkActive="selected"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <p class="mb-2">Institutions</p>
+            </div>
+          </p-header>
+          <div
+            class="sidebar-items--link d-flex flex-column align-items-start"
+            [routerLink]="['/institution']"
+            routerLinkActive="selected"
+          >
+            <p class="mb-0">Create Institution</p>
+          </div>
+
+      </p-accordionTab>
+ 

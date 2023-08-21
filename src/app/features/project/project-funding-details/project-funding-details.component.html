@@ -1,0 +1,120 @@
+<div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+    <div class="col-3 d-flex align-items-center">
+        <label class="font-weight-bold">Add Funding Details</label>
+    </div>
+    <div class="col-3 d-flex align-items-center ml-4">
+        <button type="button" (click)="onAddButtonClick(dt)" pButton pRipple icon="pi pi-plus"
+            styleClass="p-button-warn" [disabled]="!projectId"></button>
+    </div>
+</div>
+<div class="mt-4">
+    <div>
+        <p class="info-message text-warning offset-2 col-4" *ngIf="!projectId">
+            Add funding details will enable after first Save.</p>
+    </div>
+</div>
+
+<div class="d-flex justify-content-start align-content-center flex-wrap mt-15">
+    <div class="col-12 d-flex align-items-center">
+        <p-table #dt [value]="projectFundingDetails" dataKey="id" editMode="row" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="tbl-hdr-cell-small">Name of the Donor</th>
+                    <th class="tbl-hdr-cell-small">Private/Public/International</th>
+                    <th class="tbl-hdr-cell-small">Contribution for Initial Investment</th>
+                    <th class="tbl-hdr-cell-small">Contribution for Annual Funding</th>
+                    <th style="width: 8rem;" class="tbl-hdr-cell-small"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="record">
+                    <td class="tbl-cell-small" style="width: 15rem">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="record.donor" maxlength="256"
+                                    class="form-control editable-cell-input" />
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ record.donor }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td class="tbl-cell-small" style="width: 25rem">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="donorTypesList" styleClass="editable-cell-full-width-select"
+                                    class="ignore-ellipsis" [(ngModel)]="record.donorTypeObj" placeholder="Select .."
+                                    optionLabel="name" (onChange)="onChangeDonorType($event, record)">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ donorTypesMap[record.donorType] }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td class="tbl-cell-small" style="width: 25rem">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <div class="row">
+                                    <div class="col-6 editable-cell-input-div">
+                                        <p-inputNumber name="tpc" [(ngModel)]="record.initialInvestment" [step]="0.01"
+                                            [min]="0" [showButtons]="true" mode="decimal" [minFractionDigits]="2"
+                                            [maxFractionDigits]="2" #tpc="ngModel" class="editable-cell-input">
+                                        </p-inputNumber>
+                                    </div>
+                                    <div class="col-6">
+                                        <p-dropdown [options]="currencyList"
+                                            styleClass="editable-cell-full-width-select" class="ignore-ellipsis"
+                                            [(ngModel)]="record.initialInvestmentCurrency" placeholder="Select .."
+                                            optionLabel="name"></p-dropdown>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ record.initialInvestment + ' ' + record.initialInvestmentCurrency?.name}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td class="tbl-cell-small" style="width: 25rem">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <div class="row">
+                                    <div class="col-6 editable-cell-input-div">
+                                        <p-inputNumber name="tpc" [(ngModel)]="record.annualFunding" [step]="0.01"
+                                            [min]="0" [showButtons]="true" mode="decimal" [minFractionDigits]="2"
+                                            [maxFractionDigits]="2" #tpc="ngModel" class="editable-cell-input">
+                                        </p-inputNumber>
+                                    </div>
+                                    <div class="col-6">
+                                        <p-dropdown [options]="currencyList"
+                                            styleClass="editable-cell-full-width-select" class="ignore-ellipsis"
+                                            [(ngModel)]="record.annualFundingCurrency" placeholder="Select .."
+                                            optionLabel="name"></p-dropdown>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ record.annualFunding + ' ' + record.annualFundingCurrency?.name}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td style="text-align: center;" class="tbl-cell-small">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                            (click)="onRowEditInit(record)" class="p-button-rounded p-button-text"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                            (click)="onRowEditSave(record, dt, ri)"
+                            class="p-button-rounded p-button-text p-button-success p-mr-2"
+                            [disabled]="!record.donor"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                            (click)="onRowEditCancel(record, ri)"
+                            class="p-button-rounded p-button-text p-button-danger"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert>

@@ -1,0 +1,713 @@
+<div class="wrapper d-flex flex-row flex-grow-1">
+  <div class="sidebar d-flex flex-column customSB d-print-none" [ngClass]="{ open: togglemenu || innerWidth > 1280 }">
+    <div class="sidebar--button selectable" (click)="togglemenu = !togglemenu">
+      <i class="pi pi-angle-double-right" *ngIf="!togglemenu"></i>
+      <i class="pi pi-angle-double-left" *ngIf="togglemenu"></i>
+    </div>
+    <div class="sidebar--header">
+      <img src="../../../assets/images/logo.png" width="33" /> NCC-DSN
+    </div>
+    <div class="m-0 ml-2">
+      <div class="p-text-left p-text-nowrap p-text-truncate m-1">
+        <p class="m-0"><small>{{userType}}</small></p>
+      </div>
+    </div>
+    <div class="sidebar-items flex-grow-1">
+      <div data-ccs-admin-menu *ngIf="userRole.role == 1">
+        <div class="sidebar-items--link  align-items-start" [routerLink]="['/home']" routerLinkActive="selected">
+          <div class=""></div>
+          Home
+        </div>
+        <p-accordion>
+
+          <p-accordionTab data-institutions>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-center">
+              <!-- <i class="cash-icon icon-32x24 mr-20"></i> -->
+              <div [routerLink]="['/institution-list']" routerLinkActive="selected"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <p class="mb-2">Institutions</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/institution-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Add institutions</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/institution-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage institutions</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-users>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div [routerLink]="['/user-list']" routerLinkActive="selected">
+                <p class="mb-2">Users</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/user-new']"
+              routerLinkActive="selected">
+              <p class="mb-0  ml-20">Create users</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start ml-16" [routerLink]="['/user-list']"
+              routerLinkActive="selected">
+
+              <p class="mb-0 ml-20">Manage users</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-parameters>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Parameters</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/parameter-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Create parameters</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/parameter-location-list']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage parameters</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request/parameter']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Data request</p>
+            </div>
+
+
+            <p-accordionTab data-cc-data>
+
+              <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+                <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+                <div routerLinkActive="selected">
+                  <p class="mb-3 ml-20">View Published Parameter Data</p>
+                </div>
+              </p-header>
+              <div *ngFor="let ccdc of ccdcategory"
+                class="sidebar-items--link d-flex flex-column align-items-start ml-16"
+                [routerLink]="['/parameter-location-data/search']" [queryParams]="{categoryId: ccdc.id}"
+                routerLinkActive="selected">
+                <p class="mb-0 ml-40">{{ccdc.name}}</p>
+              </div>
+
+            </p-accordionTab>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-projects>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Projects</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Add projects</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage projects</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request/project-program']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Information request</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/public/project-view-page']" [queryParams]="{downlod: false}" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Published Project Information</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-projects>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Policies</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Add policies</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage policies</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request/policy']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Information request</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/public/policy-view-page']" [queryParams]="{downlod: false}" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Published Policy Information</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-publish-data>
+
+
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2" style="line-height: 1.2;">Accept and publish data and information</p>
+              </div>
+            </p-header>
+
+
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request-approve']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Climate change data</p>
+            </div>
+
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request-approve-projectprogram']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Project information</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/data-request-approve-policy']" routerLinkActive="selected"
+              [routerLinkActiveOptions]="{ exact: true }">
+              <p class="mb-0 ml-20">Policy information</p>
+            </div>
+
+          </p-accordionTab>
+
+
+
+
+
+          <p-accordionTab data-Published-data-and-information>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2" style="line-height: 1.2;">View published data and information</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['data/parameters']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Climate change data</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/project-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Project information</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/policy-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Policy information</p>
+            </div>
+
+          </p-accordionTab>
+
+          <p-accordionTab audit>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2" style="line-height: 1.2;">Audit</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['audit']"
+              routerLinkActive="selected">
+              <p class="mb-0  ml-20">Data Request Audit</p>
+            </div>
+          </p-accordionTab>
+
+          <p-accordionTab data-Master-Data>
+
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-center">
+              <!-- <i class="cash-icon icon-32x24 mr-20"></i> -->
+              <div [routerLink]="['/masterdata/sector']" routerLinkActive="selected"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <p class="mb-2">Master Data</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/masterdata/ccdatacategory']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">CC Data Category</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/masterdata/ccimpact']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Climate Change Impact</p>
+            </div>
+            <!-- <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/masterdata/mitigation']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">CC Data Categories</p>
+            </div> -->
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/masterdata/sector']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Sectors</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/masterdata/unit-of-measure']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Units of Measure</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/masterdata/unit-of-measure-conversion']" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Unit Conversion</p>
+            </div>
+
+
+
+
+
+
+
+
+
+
+          </p-accordionTab>
+
+
+        </p-accordion>
+
+      </div>
+      <div data-institution-admin-menu *ngIf="userRole.role == 3">
+        <div class="sidebar-items--link  align-items-start" [routerLink]="['/institution-home']"
+          routerLinkActive="selected">
+          <div class=""></div>
+          Home
+        </div>
+        <p-accordion>
+
+          <p-accordionTab data-users>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div [routerLink]="['/user-list']" routerLinkActive="selected">
+                <p class="mb-2">Users</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/user-new']"
+              routerLinkActive="selected">
+              <p class="mb-0  ml-20">Create users</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start ml-16" [routerLink]="['/user-list']"
+              routerLinkActive="selected">
+
+              <p class="mb-0 ml-20">Manage users</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-parameter>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Parameters</p>
+              </div>
+            </p-header>
+
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-dataassign']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Assign DEO / Review data</p>
+            </div>
+
+            <!-- <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-assigneddata']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div> -->
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-dataentry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+
+
+          </p-accordionTab>
+
+          <p-accordionTab data-projects>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Projects</p>
+              </div>
+            </p-header>
+
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Add projects</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage projects</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-project-data-assign']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Assign to DEO / Review Information</p>
+            </div>
+
+
+            <!-- <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-project-data-entry-requests']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div> -->
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-project-data-entry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+          </p-accordionTab>
+
+          <p-accordionTab data-policies>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Policies</p>
+              </div>
+            </p-header>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy-new']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Add policies</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Manage policies</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-policy-data-assign']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Assign to DEO / Review Information</p>
+            </div>
+
+
+            <!-- <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-policy-data-entry-requests']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div> -->
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-policy-data-entry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+
+          </p-accordionTab>
+
+
+
+          <p-accordionTab data-history>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Institution Data and Information History</p>
+              </div>
+            </p-header>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/parametr']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Parameters</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/project']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Projects</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/policy']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Policies</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2" style="line-height: 1.2;">View published data and information</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['data/parameters']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Climate change data</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/project-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Project information</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/policy-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0 ml-20">Policy information</p>
+            </div>
+
+          </p-accordionTab>
+
+        </p-accordion>
+
+
+
+
+
+
+
+
+        <!-- <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-center">
+              <div [routerLink]="['/institution-list']" routerLinkActive="selected"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <p class="mb-2">Project</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Project List</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/project']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Create Project</p>
+            </div>
+
+
+          </p-accordionTab> -->
+
+
+
+        <!-- <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-center">
+              <div [routerLink]="['/parameter-list']" routerLinkActive="selected"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <p class="mb-2">Policy</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy-list']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Policy List</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['/policy']"
+              routerLinkActive="selected">
+              <p class="mb-0 ml-20">Policy Parameter</p>
+            </div>
+
+          </p-accordionTab> -->
+
+
+
+
+
+      </div>
+      <div data-institution-deo-menu *ngIf="userRole.role == 4 || userRole.role == 2">
+
+        <p-accordion>
+
+          <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div [routerLink]="['/institution-assigneddata']" routerLinkActive="selected">
+                <p class="mb-2">Parameters</p>
+              </div>
+
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-assigneddata']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-dataentry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+
+
+
+          </p-accordionTab>
+
+          <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div [routerLink]="['/institution-assigneddata']" routerLinkActive="selected">
+                <p class="mb-2">Projects</p>
+              </div>
+
+            </p-header>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-project-data-entry-requests']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-project-data-entry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+
+
+
+
+
+
+          </p-accordionTab>
+
+          <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div [routerLink]="['/institution-assigneddata']" routerLinkActive="selected">
+                <p class="mb-2">Policies</p>
+              </div>
+
+            </p-header>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-policy-data-entry-requests']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Requests</p>
+            </div>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-policy-data-entry']" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Enter data</p>
+            </div>
+
+
+          </p-accordionTab>
+
+
+
+
+
+
+
+
+
+          <p-accordionTab data-history>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2">Institution Data and Information History</p>
+              </div>
+            </p-header>
+
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/parametr']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Parameters</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/project']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Projects</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['/institution-data-request-history/policy']" routerLinkActive="selected">
+              <p class="mb-0   ml-20">Policies</p>
+            </div>
+
+
+          </p-accordionTab>
+
+          <p-accordionTab>
+            <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+              <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+              <div routerLinkActive="selected">
+                <p class="mb-2" style="line-height: 1.2;">View published data and information</p>
+              </div>
+            </p-header>
+            <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['data/parameters']"
+              routerLinkActive="selected">
+              <p class="mb-0  ml-20">Climate change data</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/project-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Project information</p>
+            </div>
+            <div class="sidebar-items--link d-flex flex-column align-items-start"
+              [routerLink]="['public/policy-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+              <p class="mb-0  ml-20">Policy information</p>
+            </div>
+
+          </p-accordionTab>
+
+
+
+        </p-accordion>
+
+      </div>
+      <p-accordion *ngIf="userRole.role == 5">
+        <p-accordionTab data-Published-data-and-information>
+          <p-header class="p-accordion-header-text d-flex flex-row align-items-left">
+            <!-- <i class="sipp-icon icon-24x26 mr-25"></i> -->
+            <div routerLinkActive="selected">
+              <p class="mb-2" style="line-height: 1.2;">View published data and information</p>
+            </div>
+          </p-header>
+          <div class="sidebar-items--link d-flex flex-column align-items-start" [routerLink]="['data/parameters']"
+            routerLinkActive="selected">
+            <p class="mb-0 ml-20">Climate change data</p>
+          </div>
+          <div class="sidebar-items--link d-flex flex-column align-items-start"
+            [routerLink]="['public/project-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+            <p class="mb-0 ml-20">Project information</p>
+          </div>
+          <div class="sidebar-items--link d-flex flex-column align-items-start"
+            [routerLink]="['public/policy-view-page']" [queryParams]="{downlod: true}" routerLinkActive="selected">
+            <p class="mb-0 ml-20">Policy information</p>
+          </div>
+
+        </p-accordionTab>
+      </p-accordion>
+
+
+      <div class="sidebar-items--link" (click)="logout()">
+        <i class="pi pi-sign-out"></i> Logout
+      </div>
+
+
+    </div>
+
+    <div class="sidebar--footer">
+      <div></div>
+      <div></div>
+      <div></div>
+      <!-- <div class="sidebar-items--link" [routerLink]="['/settings']" routerLinkActive="router-link-active">
+        <i class="pi pi-cog"></i> Settings
+      </div> -->
+      <div class="ml-2 mr-2">
+        <!-- <p-dropdown [disabled]="true" [options]="userRoles" [(ngModel)]="userRole" placeholder="Select a City"
+          optionLabel="name">
+        </p-dropdown> -->
+
+      </div>
+
+      <!-- <div class="sidebar-items--link" (click)="logout()" [routerLink]="['/login']" routerLinkActive="router-link-active">
+        <i class="pi pi-sign-out"></i> Logout
+      </div> -->
+
+
+
+
+    </div>
+  </div>
+  <div class="main d-flex flex-column flex-grow-1">
+    <div class="d-flex flex-column justify-content-end">
+      <div class="p-text-nowrap p-text-truncate m-0 pr-2 text-right">
+        <small><b>{{useremail}}</b></small>
+      </div>
+      <div class="p-text-nowrap p-text-truncate m-0 mb-1 pr-2 text-right">
+        <small><b>{{userInstitution}}</b></small>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<!-- 
+<div  class="d-flex flex-column flex-grow-1"  *ngIf="hideSidebar">
+  <router-outlet></router-outlet>
+</div> -->

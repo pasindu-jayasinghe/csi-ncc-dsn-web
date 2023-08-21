@@ -1,0 +1,397 @@
+<div class="main--header d-flex flex-column flex-md-row justify-content-between align-items-center"> 
+    <h2> <i class="pi pi-arrow-left align-middle mr-25 selectable"></i> Settings</h2> 
+</div>
+
+<div class="main--content d-flex flex-column flex-grow-1"> 
+
+        <div class="main--content--card main--content--nocard flex-grow-1">
+              
+            <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <p-card class="p-adjust">
+                            <div class="p-25">
+                                <div class="form-group mb-25">
+                                    <p class="font-weight-bold xlarge">Reset your password</p>
+                                </div>
+                                <div class="form-group  mb-25">
+                                    <label class="font-weight-bold">New Password</label>
+                                    <input class="form-control" type="password" />
+                                </div>
+                                
+                                <p class="info-message">Password Strength - Choose a password with at least six characters, and at least one capital letter, number or symbol </p>
+
+                                <div class="form-group  mb-25">
+                                    <label class="font-weight-bold">Confirm Password</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                
+                                
+                                
+                            </div>
+                            <p-footer>
+                                <div class="row">
+                                        <div class="col-md-12">
+                                                <button class="btn btn-success mr-3" pButton type="button" label="RESET PASSWORD"></button>
+                                                <button class="btn btn-light" pButton type="button" label="CANCEL"></button>
+                                                
+                                        </div>
+                                </div>
+                            </p-footer>
+                        </p-card>
+                    </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="TERM & CONDITIONS POPUP" (click)="ShowTermsCondition()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="SELLING SUMMARY POPUP" (click)="ShowSellingSummary()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="THANKYOU POPUP" (click)="ShowThankyouPayment()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="BUYING SUMMARY POPUP" (click)="ShowBuyingPayment()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="PLEASE REVIEW POPUP" (click)="ShowPleaseReview()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="YOUR ORDER HAS BEEN PLACED POPUP" (click)="ShowOrderPlaced()"></button>
+                        <button class="btn btn-success mr-3 mb-3" pButton type="button" label="ERROR POPUP" (click)="ShowErrorPopup()"></button>
+                </div>
+             </div>
+
+           
+    
+        </div>
+</div>
+
+
+
+
+<p-dialog class="footer-w-border" [(visible)]="displayTermsCondition" [style]="{width: '50vw'}" [modal]="true">
+    <!-- Terms And Condition POPUP-->
+    <p-header>
+      <h6>Before you continue please agree to our terms and conditions</h6>
+    </p-header>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <p class="mb-5">
+                Money from the sale of an OEIC or Unit trust can be paid directly to your bank account. 
+                Money from the sale of an Exchange traded instrument will be paid as cash to your Acorn account and can be withdrawn once settled. 
+                Please remember that Funds are priced on a forward basis. This means you do not know the exact price you will get for sell until after the transaction is priced.
+                The prices you can see on our website are historic prices from previous pacing points. We accept instructions for a given fund up to a 'cut-off point, which for most funds on our platform is 11 am Monday to Friday.
+                For more information please contact your fund manager.
+            </p>
+        </div>
+        <div class="col-md-12">
+            <p-checkbox class="checkbox-success" [(ngModel)]="value" binary="true" inputId="binary" label="I have read the Key information document for this order. I agree with Acorn policies and the illustrations"></p-checkbox>            
+        </div>
+    </div>
+    <p-footer class="border-top pt-3 p-3 d-flex justify-content-end">
+        <button class="btn btn-light">CANCEL</button>
+        <button class="btn btn-success">I UNDERSTAND</button>
+    </p-footer>
+
+</p-dialog>
+
+<p-dialog class="footer-w-border" [(visible)]="displaySellingSummary" [style]="{width: '50vw'}" [modal]="true">
+    <!-- SELL Summary POPUP-->
+    <p-header>
+        <h6>Selling Summary</h6>
+        <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal">Please confirm before selling</p>
+      </p-header>
+      <div class="row mb-3">
+          <div class="col-md-12">
+             <div class="item-summary">
+              <div class="item-summary-content">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p>JPM US Select</p>
+                  </div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+              <div class="item-summary-footer">
+                <div class="row">
+                  <div class="col-md-8 font-weight-bold">Total</div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+          
+      </div>
+      <p-footer class="border-top pt-3 p-3 d-flex justify-content-end">
+          <button class="btn btn-light">CANCEL</button>
+          <button class="btn btn-success">SELL NOW</button>
+      </p-footer>
+</p-dialog>
+
+<p-dialog class="footer-w-border" [(visible)]="displaybuyingSummary" [style]="{width: '50vw'}" [modal]="true">
+    <!-- SELL Summary POPUP-->
+    <p-header>
+        <h6>Buying Summary</h6>
+        <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal">Please confirm before buying</p>
+      </p-header>
+      <div class="row mb-3">
+          <div class="col-md-12">
+             <div class="item-summary">
+              <div class="item-summary-content">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p>JPM US Select</p>
+                  </div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+              <div class="item-summary-footer">
+                <div class="row">
+                  <div class="col-md-8 font-weight-bold">Total</div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+          <div class="col-md-12 mt-4">
+                <p-checkbox class="checkbox-success" [(ngModel)]="value" binary="true" inputId="binary" label="I have read the Key information document for this order. I agree with Acorn policies and the illustrations.  "></p-checkbox>            
+          </div>
+      </div>
+      <p-footer class="border-top pt-3 p-3 d-flex justify-content-end">
+          <button class="btn btn-light">CANCEL</button>
+          <button class="btn btn-success">BUY NOW</button>
+      </p-footer>
+</p-dialog>
+
+<p-dialog class="p-dialog-w-banner footer-w-border" [style]="{width: '50vw'}" [modal]="true">
+    <p-header class="p-dialog-header-banner">
+        <div class="mb-3"><i class="pi pi-check-circle font-size-32"></i></div>
+        <h5 class="regular">Thank you for your payment</h5>
+        <h5 class="regular font-weight-normal">Reference number : 234098234</h5>
+      </p-header>
+      <div class="row mb-3 mt-5">
+          <div class="col-md-12">
+             <div class="item-summary">
+              <div class="item-summary-content">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p>JPM US Select</p>
+                  </div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+              <div class="item-summary-footer">
+                <div class="row">
+                  <div class="col-md-8 font-weight-bold">Total</div>
+                  <div class="col-md-4 text-right font-weight-bold">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+          
+      </div>
+      <p-footer class="border-top pt-3 p-3 d-flex align-items-center">
+          <p class="flex-grow-1 text-left text-gray-1 ml-2"><i class="pi pi-download mr-2"></i>Download Report</p>
+          <button class="btn btn-light">CANCEL</button>
+          <button class="btn btn-success">OK</button>
+      </p-footer>
+</p-dialog>
+
+<p-dialog class="p-dialog-w-banner footer-w-border" [(visible)]="tankyouPayment" [style]="{width: '50vw'}" [modal]="true">
+    <p-header class="p-dialog-header-banner">
+        <div class="mb-3"><i class="pi pi-check-circle font-size-32"></i></div>
+        <h5 class="regular">Thank you for your payment</h5>
+        <h5 class="regular font-weight-normal">Reference number : 234098234</h5>
+      </p-header>
+      <div class="row mb-3 mt-5">
+          <div class="col-md-12">
+             <div class="item-summary">
+              <div class="item-summary-content">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p>JPM US Select</p>
+                  </div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+              <div class="item-summary-footer">
+                <div class="row">
+                  <div class="col-md-8 font-weight-bold">Total</div>
+                  <div class="col-md-4 text-right font-weight-bold">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+          
+      </div>
+      <p-footer class="border-top pt-3 p-3 d-flex align-items-center">
+          <p class="flex-grow-1 text-left text-gray-1 ml-2"><i class="pi pi-download mr-2"></i>Download Report</p>
+          <button class="btn btn-light">CANCEL</button>
+          <button class="btn btn-success">OK</button>
+      </p-footer>
+</p-dialog>
+
+<p-dialog class="heading-none footer-w-border" [(visible)]="pleaseReview" [style]="{width: '50vw'}" [modal]="true">
+  
+  <p-header>
+   <h6></h6>
+  </p-header>
+  <div class="row mb-3">
+    <div class="col-md-12">
+        <h6>Please review our fees for the next 12 months before buying</h6>
+        <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal">Over the next year here’s what we estimate your’ll pay, based on your current contributions. Your actual costs may vary based on the performance of your investments </p>
+    </div>
+    <div class="col-md-12">
+      <div class="item-summary h-100">
+          <div class="item-summary-content noscroll">
+            <div class="px-3 border-bottom">
+                <div class="row">
+                    <div class="col-md-6 d-flex flex-column justify-content-center border-right">
+                      <div class="my-3">
+                          <p class="mb-0">Service Fee</p>
+                          <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal mb-0">What we charge for administering your investment</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18 border-right">
+                        <div class="my-3">0.51%</div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18">
+                        <div class="my-3">£6.00</div>
+                    </div>
+                  </div>
+            </div>
+            <div class="px-3 border-bottom">
+                <div class="row">
+                    <div class="col-md-6 d-flex flex-column justify-content-center border-right">
+                      <div class="my-3">
+                          <p class="mb-0">Investment fund costs</p>
+                          <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal mb-0">What the fund manager charges</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18 border-right">
+                        <div class="my-3">
+                            0.13%
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18">
+                        <div class="my-3">
+                            £2.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-3">
+                <div class="row">
+                    <div class="col-md-6 d-flex flex-column justify-content-center  border-right">
+                      <div class="my-3">
+                          <p class="mb-0">Market spread</p>
+                          <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal mb-0">The difference between the buy price and the sell price</p>
+                      </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18  border-right">
+                        <div class="my-3">
+                            0.06%
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18">
+                       <div class="my-3">
+                          £1.00
+                       </div>
+                    </div>
+              </div>
+            </div>
+           
+          <div class="item-summary-footer py-0">
+            <div class="">
+                <div class="row">
+                    <div class="col-md-6 font-weight-bold d-flex flex-column justify-content-center border-right">
+                       <div class="my-3">
+                          <p class="mb-0">Total</p>
+                        <p class="text-gray-1 text-gray-1 font-size-12 font-weight-normal mb-0">The total you will be paying</p>
+                       </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18 border-right">
+                        <div class="my-3">
+                            0.06%
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center justify-content-end font-size-18">
+                        <div class="my-3">
+                            £ 9.00
+                        </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+          </div>
+      </div>
+    </div>
+  </div>
+  <p-footer class="border-top pt-3 p-3 d-flex justify-content-end">
+      <button class="btn btn-light">CANCEL</button>
+      <button class="btn btn-success">PROCEED BUYING</button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog class="p-dialog-w-banner footer-w-border" [(visible)]="orderPlaced" [style]="{width: '50vw'}" [modal]="true">
+    <p-header class="p-dialog-header-banner">
+        <div class="mb-3"><i class="pi pi-check-circle font-size-32"></i></div>
+        <h5 class="regular">Your order has been placed</h5>
+        <h5 class="regular font-weight-normal">Reference number : 234098234</h5>
+      </p-header>
+      <div class="row mb-3 mt-5">
+          <div class="col-md-12">
+             <div class="item-summary">
+              <div class="item-summary-content noscroll">
+                <div class="row p-3">
+                  <div class="col-md-8">
+                    <p class="mb-0">JPM US Select</p>
+                  </div>
+                  <div class="col-md-4 text-right">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+              <div class="item-summary-footer">
+                <div class="row">
+                  <div class="col-md-8 font-weight-bold">Total</div>
+                  <div class="col-md-4 text-right font-weight-bold">
+                      £ 1000.00
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+          
+      </div>
+      <p-footer class="border-top pt-3 p-3 d-flex align-items-center">
+          <p class="flex-grow-1 text-left text-gray-1 ml-2"><i class="pi pi-download mr-2"></i>Download Report</p>
+          <button class="btn btn-light">CANCEL</button>
+          <button class="btn btn-success">OK</button>
+      </p-footer>
+</p-dialog>
+
+<p-dialog header=" " [(visible)]="errorPopup" modal="true">
+  <div class="text-center pr-30 pl-30 mw-460">
+    <img class="mb-20" src="../../../../assets/images/error-image.png" />
+    <h5 class="text-danger-light">Oops</h5>
+    <h6 class="mb-20 text-danger-light">Something went wrong</h6>
+    <p>
+      Please try again and see how it goes, if that doesn’t work again, please
+      do send us an email at support@nutmeg.com and our team will look at the
+      issue ASAP
+    </p>
+    <a class="btn btn-primary mt-15" href="javascript:void(0)"
+      >PROCEED TO DASHBOARD</a
+    >
+  </div>
+</p-dialog>

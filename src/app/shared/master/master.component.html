@@ -1,0 +1,88 @@
+<div class="wrapper m-4">
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <input class="form-control p-3" type="text" maxlength="256" [(ngModel)]="searchBy.name" pInputText
+                        placeholder="search by name" />
+                </div>
+                <div class="col-auto">
+                    <input class="form-control p-3" type="text" maxlength="256" [(ngModel)]="searchBy.description" pInputText
+                        placeholder="search by description." />
+                </div>
+                <div class="col-auto">
+                    <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                        styleClass="p-button-warn"></button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" (click)="onAddButtonClick(dt)" pButton pRipple icon="pi pi-plus"
+                        styleClass="p-button-warn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <p-table #dt [value]="itemlist" dataKey="id" editMode="row" [lazy]="true" (onLazyLoad)="loadItem($event)"
+            [paginator]="true" [rows]="rows" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[5, 10, 15, 20, 50]" [totalRecords]="totalRecords" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <!-- <th style="width: 10rem;" class="tbl-hdr-cell-small">Id</th> -->
+                    <th class="tbl-hdr-cell-small">Name</th>
+                    <th class="tbl-hdr-cell-small">Description</th>
+                    <th style="width: 8rem;" class="tbl-hdr-cell-small"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-sector let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="sector">
+                    <!-- <td style="width: 10rem;" class="tbl-cell-small">
+                        {{ sector.id > 0 ? sector.id : "" }}
+                    </td> -->
+                    <td class="tbl-cell-small">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="sector.name" maxlength="255"
+                                    class="form-control editable-cell-input" (input)="inputEvent(sector)" />
+                                    <p class="info-message text-danger"
+                    *ngIf="sector['invalidInput']">
+                    This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ sector.name }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td class="tbl-cell-small">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="sector.description" maxlength="2500"  (input)="inputEvent(sector)"
+                                    class="form-control editable-cell-input" />
+                                        <p class="info-message text-danger"
+                        *ngIf="sector['invalidInputDes']">
+                        This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                            
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ sector.description }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td style="text-align: center;" class="tbl-cell-small">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                            (click)="onRowEditInit(sector)" class="p-button-rounded p-button-text"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                            (click)="onRowEditSave(sector, dt, ri)"
+                            class="p-button-rounded p-button-text p-button-success p-mr-2"
+                            [disabled]="!sector.name || sector['invalidInput']  || sector['invalidInputDes']"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                            (click)="onRowEditCancel(sector, ri)"
+                            class="p-button-rounded p-button-text p-button-danger"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

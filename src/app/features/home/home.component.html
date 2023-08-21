@@ -1,0 +1,45 @@
+<div class="wrapper m-4">
+  <div class="mb-4">
+    <h4>National Climate Change Data Sharing Network</h4>
+    <hr />
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let d of data; let i = index">
+      <app-climate-change-barchart [title]="d.title" [data]="d" [chartName]="d.title">
+      </app-climate-change-barchart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-12">
+      <div class="mb-5">
+        <div class="mb-6">
+          <h6>Users</h6>
+          <hr />
+        </div>
+        <p-chart type="horizontalBar" class="min-h-200" height="400px" [data]="userData" [options]="options"></p-chart>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-4">
+      <app-climate-change-barchart title="Adaptation Data" [data]="data" chartName="testq">
+      </app-climate-change-barchart>
+    </div>
+    <div class="col-4">
+      <app-climate-change-barchart title="Mitigation Data" [data]="data" chartName="test-2">
+      </app-climate-change-barchart>
+    </div>
+    <div class="col-4">
+      <app-climate-change-barchart title="Mitigation Data - 3" [data]="data" chartName="test-3">
+      </app-climate-change-barchart>
+    </div>
+    <div class="col-4">
+      <app-climate-change-barchart title="Mitigation Data - 4" [data]="data" chartName="test-4">
+      </app-climate-change-barchart>
+    </div>
+  </div> -->
+
+</div>

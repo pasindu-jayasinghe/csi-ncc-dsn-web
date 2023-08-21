@@ -1,0 +1,194 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+
+        <h4>{{isNew ? "Add" : "Edit" }} {{alertHeader}}</h4>
+        <hr />
+    </div>
+    <form #fData="ngForm" autocomplete="off" (ngSubmit)="saveForm(fData)" novalidate>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Name *</label>
+            </div>
+            <div class="col-4">
+                <input type="text" name="name" class="form-control" [(ngModel)]="institution.name" #fn="ngModel"
+                    placeholder="Enter name" required [pattern]="'^[a-zA-Z0-9  ,-.]{1,256}$'" (change)="nameChange()" (ngModelChange)="onnameKeyDown($event)" />
+                <p class="info-message text-danger mt-2"
+                    *ngIf="fn.invalid  && (fData.submitted || fn.touched || fn.dirty)">
+                    This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                <p class="info-message text-danger mt-2"
+                    *ngIf="exsistingInstitution && (fData.submitted || fn.touched || fn.dirty)">
+                    Institution already exists. Duplicate entries are not allowed.</p>
+            </div>
+        </div>
+        <div *ngIf="relatedItem !== undefined && relatedItem !== null && relatedItem?.length > 0"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Related Param</label> -->
+            </div>
+            <div class="col-8">
+                <div mb-5 class="font-weight-bold font-italic"> Similar Institution </div>
+                <h1></h1>
+                <div *ngFor="let p of relatedItem">
+                    {{p.name}}
+                    <a class="text-break font-weight-light ml-20" [routerLink]="['/institution']"
+                        [queryParams]="{id: p.id}" target="_blank"> View</a>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Description *</label>
+            </div>
+            <div class="col-4">
+
+                <textarea type="text" name="description" pInputTextarea style="width:100%;" class="form-control"
+                    [(ngModel)]="institution.description" #fd="ngModel" placeholder="Enter description" [rows]="5"
+                    [cols]="30" maxlength="2500" required [pattern]="'^[a-zA-Z0-9  ,-.]{1,2500}$'"></textarea>
+                <p class="info-message text-danger"
+                    *ngIf="fd.invalid  && (fData.submitted || fd.touched || fd.dirty)">
+                    This is a mandatory field, max length is limited to 2500 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Category *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="category" [options]="categories" [(ngModel)]="institution.category"
+                    #fcategory="ngModel" placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.category?.id  && (fData.submitted || fcategory.touched || fcategory.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Hierarchy *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="hir" [options]="hierarchyList" [(ngModel)]="institution.hierarchy" #hir="ngModel"
+                    placeholder="Select .." optionLabel="name" (onChange)="onHierachyChange()" required>
+                </p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.hierarchy?.id  && (fData.submitted || hir.touched || hir.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div *ngIf="institution.hierarchy?.id == 2"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Province *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchProvinceDropdown" [options]="provinces" [(ngModel)]="institution.province"
+                    #fprovince="ngModel" [showClear]="true" (onChange)="onChangeProvince()" placeholder="Select .."
+                    optionLabel="name" styleClass="custom" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.province?.id  && institution.hierarchy?.id == 2 && (fData.submitted || fprovince.touched || fprovince.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div *ngIf="institution.hierarchy?.id == 3"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">District *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchDDropdown" [options]="districts" [(ngModel)]="institution.district"
+                    #fdistricts="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!districts || districts.length == 0" (onChange)="onChangeDistrict()"
+                    placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.district?.id  && institution.hierarchy?.id == 3 && (fData.submitted || fdistricts.touched || fdistricts.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div *ngIf="institution.hierarchy?.id == 4"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Divisional Secretariat *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="searchDSDropdown" [options]="divisionalSecretariats"
+                    [(ngModel)]="institution.divisionalSecretariat" #fdistricts="ngModel" [filter]="true"
+                    [showClear]="true" [disabled]="!divisionalSecretariats || divisionalSecretariats.length == 0"
+                    (onChange)="onChangeDS()" placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.divisionalSecretariat?.id  && institution.hierarchy?.id == 4 && (fData.submitted || fdistricts.touched || fdistricts.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Type *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="type" [options]="types" [(ngModel)]="institution.type" #ftype="ngModel"
+                    placeholder="Select .." optionLabel="name" required>
+                </p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.type?.id  && (fData.submitted || ftype.touched || ftype.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Parent Institution *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="institution" [options]="allInstitutions" [(ngModel)]="institution.parentInstitution"
+                    #finstitution="ngModel" [filter]="true" placeholder="Select .." optionLabel="name" required>
+                </p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!institution.parentInstitution?.id  && (fData.submitted || finstitution.touched || finstitution.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+
+        <div>
+
+            <p class="info-message text-danger offset-2 col-4"
+                *ngIf="exsistingInstitution || (fData.submitted && !fData.valid)">
+                One or more mandatory fields should be filled with valid data before save action.</p>
+        </div>
+
+        <div class="row">
+            <div class="d-flex col-1 justify-content-start">
+                <button class="btn btn-secondary text-uppercase ml-15 btn-lg" (click)="onBackClick()">Back</button>
+
+            </div>
+            <div class="col-5 d-flex justify-content-end">
+                <div class="col-4 d-flex justify-content-end p-button-vertical  justify-content-end">
+                    <button [disabled]="institution.canNotDelete == true"
+                        class="btn btn-warning  text-uppercase" type="button" (click)="onDeleteClick()"
+                        *ngIf="!isNew">Delete</button>
+                </div>
+                <div class="col-4 pr-0 d-flex justify-content-end">
+                    <button [disabled]="institution.canNotDelete == true || isSaving"
+                        class="btn btn-primary text-uppercase btn-lg" type="submit">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- <app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+            (alertClose)="showAlert = false">
+        </app-alert> -->
+
+
+    </form>
+
+
+
+
+</div>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>

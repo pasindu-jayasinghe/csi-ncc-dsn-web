@@ -1,0 +1,142 @@
+<div class="m-4">
+    <div class="mb-4">
+        <h4> {{policy?.name}}</h4>
+        <hr />
+    </div>
+    <div class="col-8 table-responsive">
+        <table class="table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td style="width:300px"><label class="font-weight-bold">Name</label></td>
+                    <td class="text-break">{{policy.name}}</td>
+                </tr>
+                <tr>
+                    <td><label class="font-weight-bold">Climate Change Data Category</label></td>
+                    <td class="text-break">
+                        <div *ngFor="let ccdc of policy.climateChangeDataCategory ; let i=index">
+                            {{i == policy.climateChangeDataCategory.length - 1 ? ccdc.name : ccdc.name + ', '}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Sector</label></td>
+                    <td class="text-break">
+                        <div *ngFor="let sec of policy.sector ; let i = index">
+                            {{i == policy.sector.length ? sec.name : sec.name + ', '}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label class="font-weight-bold">Addopted date</label></td>
+                    <td class="text-break"> {{policy?.proposedDateOfCommence | date: 'yyyy-MM-dd'}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Influence</label></td>
+                    <td class="text-break"> {{policy.influence == 1 ? "National" :
+                        policy.influence == 2 ? "Provincial" :
+                        policy.influence == 3 ? "District Level" :
+                        policy.influence == 4 ? "Specific Locations" : "" }}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Description</label></td>
+                    <td class="text-break"> {{policy?.description}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Policy Formulation institutions</label></td>
+                    <td class="text-break"> {{policy?.formulationInstitution?.name}}</td>
+                </tr>
+
+                <tr>
+                    <td style="width:300px"> <label class="font-weight-bold">Documents</label></td>
+                    <td>
+                        <p-table [value]="policydoucmentList" class="table-sm" [lazy]="true"
+                            (onLazyLoad)="loadDocments($event)" [paginator]="false" [loading]="docLoading"
+                            scrollHeight="10px">
+
+                            <ng-template pTemplate="body" let-doc>
+                <tr>
+                    <td class="text-break">{{doc.fileName}}</td>
+                    <td>
+                        <div>
+
+                            <a [href]="doc.url" class="p-button p-component p-button-icon-only mr-10"
+                                icon="pi pi-download" pButton ng-reflect-icon="pi pi-download" target="_blank"></a>
+                        </div>
+                    </td>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                </ng-template>
+                <ng-template pTemplate="paginatorright">
+                    <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+                </ng-template>
+                </p-table>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-4 mb-4">
+            <h6> Policy Updates - {{policyData?.length}}</h6>
+            <hr />
+        </div>
+
+        <div *ngFor="let p of policyData">
+            <div class="mb-4 mt-4">
+                <div class="font-weight-bold mb-2">Year - {{p.year}}
+                </div>
+                <div class="table-responsive">
+                    <table class="table-sm table-bordered">
+
+                        <tbody>
+                            <tr>
+                                <td style="width:300px"><label class="font-weight-bold">Ammendments</label>
+                                </td>
+                                <td>
+                                    {{p.amendments}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><label class="font-weight-bold">Documents</label></td>
+                                <td>
+                                    <!-- <div>abc{{p.documents?.length}}</div> -->
+                                    <p-table [value]="p.documents" class="table-sm" [lazy]="true"
+                                        (onLazyLoad)="loadDocments($event)" [paginator]="false" [loading]="docLoading"
+                                        scrollHeight="10px">
+
+
+                                        <ng-template pTemplate="body" let-doc>
+                            <tr>
+                                <td>
+                                    <div>
+                                        {{doc.fileName}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <a [href]="doc.url" class="p-button p-component p-button-icon-only mr-10"
+                                            icon="pi pi-download" pButton ng-reflect-icon="pi pi-download"
+                                            target="_blank"></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </ng-template>
+
+                            </p-table>
+                            </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

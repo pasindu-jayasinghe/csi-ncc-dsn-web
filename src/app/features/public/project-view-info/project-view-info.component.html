@@ -1,0 +1,254 @@
+<div class="m-4">
+    <div class="mb-4">
+        <h4> {{project?.name}}</h4>
+        <hr />
+    </div>
+    <div class="col-8 table-responsive">
+        <table class="table-sm table-bordered">
+            <!-- <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+            </tr> -->
+            <tbody>
+                <tr>
+                    <!-- <th><label class="font-weight-bold">Name</label></th> -->
+                    <td style="width:300px"><label class="font-weight-bold">Name</label></td>
+                    <td class="text-break">{{project.name}}</td>
+                    <!-- <td>Otto</td>
+                    <td>@mdo</td> -->
+                </tr>
+                <tr>
+                    <td><label class="font-weight-bold">Project/Programme</label></td>
+                    <td class="text-break"> {{projectProgrammeType}}</td>
+                </tr>
+                <tr>
+                    <td><label class="font-weight-bold">Data Source</label></td>
+                    <td class="text-break"> {{project?.dataSource?.name}}</td>
+                </tr>
+                <tr>
+                    <td><label class="font-weight-bold">Climate Change Data Category</label></td>
+                    <td class="text-break"> {{project?.climateChangeDataCategory?.name}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Sector</label></td>
+                    <td class="text-break"> {{project?.sector?.name}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Project Type</label></td>
+                    <td class="text-break"> {{project?.projectType?.name}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Propose Date of Commencement</label></td>
+                    <td> {{proposedDate | date: 'yyyy-MM-dd'}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Project Duration</label></td>
+                    <td class="text-break"> {{project?.projectDuration}} (Years)</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Current status of the project</label></td>
+                    <td class="text-break"> {{projectCurrentStatus}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Objective(s) of the project</label></td>
+                    <td class="text-break"> {{project?.description}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Main components of the project</label></td>
+                    <td class="text-break"> {{project?.scope}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Location</label></td>
+                    <td class="text-break"> {{project.province? "Province: "+ project.province?.name : ""}}
+                        {{project.district? "District: "+ project.district?.name : ""}}
+                        {{project.divisionalSecretariat? "D.S: "+
+                        project.divisionalSecretariat?.name : ""}} </td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Project Outcomes</label></td>
+                    <td class="text-break"> {{project?.outcomes}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">GHG Emission Reductions</label></td>
+                    <td class="text-break"> {{project?.ghgEmissions}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Adaptation Benefits</label></td>
+                    <td class="text-break"> {{project?.adaptationBenefits ? project.adaptationBenefits : " Not
+                        available"}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold"> Relevant indirect SD benefits</label></td>
+                    <td class="text-break"> {{project?.indirectSDBenefit? project.indirectSDBenefit.name : " Not
+                        available"}}</td>
+                </tr>
+                <tr>
+                    <td> <label class="font-weight-bold">Relevant Direct SD benefits</label></td>
+                    <td class="text-break"> {{project?.directSDBenefit? project.directSDBenefit.name : " Not
+                        available"}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Project proponent</label></td>
+                    <td class="text-break"> {{project.projectProponents? project.projectProponents : " Not available"}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Implementing Entity</label></td>
+                    <td class="text-break"> {{project.implementingEntities? project.implementingEntities : " Not
+                        available"}}
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td> <label class="font-weight-bold">Executing Entity</label></td>
+                    <td class="text-break"> {{project.executingEntity? project.executingEntity : " Not available"}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Parties involved</label></td>
+                    <td class="text-break"> {{project.partiesInvolved? project.partiesInvolved : " Not available"}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Benefitiaries</label></td>
+                    <td class="text-break"> {{project.beneficiaries? project.beneficiaries : " Not available"}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Financing Scheme</label></td>
+                    <td class="text-break"> {{project.financingScheme? project.financingScheme : " Not available"}}</td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold">Donors</label></td>
+                    <td> {{project.publicDonor ? "public," : ""}}
+                        {{project.privateDonor ? " Private," : ""}}
+                        {{project.internationalDonor ? "international," : ""}}
+                        {{project.privatePublicDonor ? "Private Public Partnership," : ""}}
+                        {{project.ngoDonor ? "Ngo," : ""}}
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td> <label class="font-weight-bold"> Total Project cost</label></td>
+                    <td class="text-break"> {{project?.totalProjectCost ? project?.totalProjectCost +" "+
+                        project?.totalProjectCostCurrency.name
+                        : " Not available"}} </td>
+                </tr>
+
+                <tr>
+                    <td style="width:300px"> <label class="font-weight-bold">Documents</label></td>
+                    <td>
+                        <p-table [value]="projectdoucmentList" class="table-sm" [lazy]="true"
+                            (onLazyLoad)="loadDocments($event)" [paginator]="false" [loading]="projectDocLoading"
+                            scrollHeight="10px">
+
+                            <!-- <ng-template pTemplate="header">
+                <tr>
+                    <th></th>
+
+                </tr>
+                </ng-template> -->
+                            <ng-template pTemplate="body" let-doc>
+                <tr>
+                    <td class="text-break">{{doc.fileName}}</td>
+                    <td>
+                        <div>
+
+                            <a [href]="doc.url" class="p-button p-component p-button-icon-only mr-10"
+                                icon="pi pi-download" pButton ng-reflect-icon="pi pi-download" target="_blank"></a>
+                        </div>
+                    </td>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                </ng-template>
+                <ng-template pTemplate="paginatorright">
+                    <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+                </ng-template>
+                </p-table>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-4 mb-4">
+            <h6> Project Updates - {{projectDate?.length}}</h6>
+            <hr />
+        </div>
+
+        <div *ngFor="let p of projectDate">
+            <div class="mb-4 mt-4">
+                <div class="font-weight-bold mb-2">Year - {{p.year}}
+                </div>
+                <div class="table-responsive">
+                    <table class="table-sm table-bordered">
+
+                        <tbody>
+                            <tr>
+                                <td style="width:300px"><label class="font-weight-bold">Status of the project</label>
+                                </td>
+                                <td class="text-break">
+                                    {{p.projectStatus?.name}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="font-weight-bold">Progress of the project</label></td>
+                                <td class="text-break">
+                                    {{p.projectProgress}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="font-weight-bold">Documents</label></td>
+                                <td>
+                                    <!-- <div>abc{{p.documents?.length}}</div> -->
+                                    <p-table [value]="p.documents" class="table-sm" [lazy]="true"
+                                        (onLazyLoad)="loadDocments($event)" [paginator]="false"
+                                        [loading]="projectDocLoading" scrollHeight="10px">
+
+
+                                        <ng-template pTemplate="body" let-doc>
+                            <tr>
+                                <td>
+                                    <div class="text-break">
+                                        {{doc.fileName}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <a [href]="doc.url" class="p-button p-component p-button-icon-only mr-10"
+                                            icon="pi pi-download" pButton ng-reflect-icon="pi pi-download"
+                                            target="_blank"></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorright">
+                                <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+                            </ng-template>
+                            </p-table>
+                            </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

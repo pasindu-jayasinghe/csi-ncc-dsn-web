@@ -1,0 +1,191 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+
+        <h4>{{isNewUser ? "Create" : "Edit" }} User</h4>
+        <hr />
+    </div>
+    <form #fLogin="ngForm" (ngSubmit)="saveUser(fLogin)" novalidate>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">User type *</label>
+            </div>
+            <div class="col-4">
+                <!-- {{user.userType | json}} -->
+                <p-dropdown [disabled]="!isNewUser" [options]="userTypes" name="usertype" [(ngModel)]="user.userType"
+                    placeholder="Select .." optionLabel="name" #fut="ngModel" required></p-dropdown>
+                <!-- {{fut.errors | json}} {{fLogin.errors | json}} -->
+                <p class="info-message text-danger"
+                    *ngIf="!user.userType?.id  && (fLogin.submitted || fut.touched || fut.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Title *</label>
+            </div>
+            <div class="col-4">
+                <!-- <input type="text" name="title" class="form-control" [(ngModel)]="user.title" #ft="ngModel"
+                    placeholder="Enter the title" required /> -->
+                <p-dropdown name="title" [options]="userTitles" [(ngModel)]="selecteduserTitle" #ft="ngModel"
+                    placeholder="Select .." optionLabel="name" (onChange)="onChangeUser($event)"></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!user.title  && (fLogin.submitted || ft.touched || ft.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">First Name * </label>
+            </div>
+            <div class="col-4">
+                <input type="text" maxlength="64" name="firstname" class="form-control" [(ngModel)]="user.firstName" #ffn="ngModel"
+                    placeholder="Enter the first name" required [pattern]="'^[a-zA-Z0-9 ]{1,64}$'" />
+                <p class="info-message text-danger"
+                    *ngIf="( !user.firstName || ffn.invalid)  && (fLogin.submitted || ffn.touched || ffn.dirty)">
+                    This is a mandatory field, max length is limited to 64 and can contain english characters only.</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Last Name *</label>
+            </div>
+            <div class="col-4">
+                <input type="text" maxlength="64" name="lastname" class="form-control" [(ngModel)]="user.lastName" #fln="ngModel"
+                    placeholder="Enter the last name" required [pattern]="'^[a-zA-Z0-9 ]{1,128}$'" />
+                <p class="info-message text-danger"
+                    *ngIf="(!user.lastName || fln.invalid) && (fLogin.submitted || fln.touched || fln.dirty)">
+                    This is a mandatory field, max length is limited to 128 and can contain english characters only.</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Email *</label>
+            </div>
+            <div class="col-4">
+                <input [disabled]="!isNewUser" type="email" name="email" class="form-control" [(ngModel)]="user.email"
+                    #femail="ngModel" placeholder="Enter the email" pattern="[\w-\.]+@([\w-]+\.)+[\w-]{1,20}$"
+                    required />
+                <p class="info-message text-danger"
+                    *ngIf="(!user.email || femail.invalid)  && (fLogin.submitted || femail.touched || femail.dirty)">
+                    This is a mandatory field and enter a valid email address.</p>
+                <p class="info-message text-danger" *ngIf="isEmailUsed">
+                    Email address is already in use, please use a diffrent email address to add a new user.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2 d-flex align-items-center">
+                <label class="font-weight-bold">Institution *</label>
+            </div>
+            <div class="col-4">
+                <p-dropdown name="institution" [options]="institutions" [(ngModel)]="user.institution"
+                    #finstitution="ngModel" [filter]="true" placeholder="Select .." optionLabel="name"></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!user.institution.id  && (fLogin.submitted || finstitution.touched || finstitution.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2">
+                <label class="font-weight-bold">Designation *</label>
+            </div>
+            <div class="col-4">
+                <input type="text" maxlength="128" name="designation" class="form-control" [(ngModel)]="user.designation"
+                    #fdesignation="ngModel" placeholder="Enter the designation" required  [pattern]="'^[a-zA-Z0-9 ,-.]{1,128}$'"  />
+                <p class="info-message text-danger"
+                    *ngIf="(!user.designation || fdesignation.invalid)  && (fLogin.submitted || fdesignation.touched || fdesignation.dirty)">
+                    This is a mandatory field, max length is limited to 128 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2">
+                <label class="font-weight-bold">Telephone *</label>
+            </div>
+            <div class="col-4">
+                <p-inputMask type="text" name="telephone" mask="+99 99-999-9999" [autoClear]="false"
+                    placeholder="+99 999 999-9999" [(ngModel)]="user.telephone" #ftelephone="ngModel"
+                    [styleClass]="'form-control'" required>
+                </p-inputMask>
+                <p class="info-message text-danger"
+                    *ngIf="(!user.telephone  || user.telephone?.length < 12 )  && (fLogin.submitted || ftelephone.touched || ftelephone.dirty)">
+                    This is a mandatory field</p>
+                    <p class="info-message text-danger"
+                    *ngIf="user.telephone?.indexOf('_') > 0 ">
+                    A valid telephone number is required.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2">
+                <label class="font-weight-bold">Mobile *</label>
+            </div>
+            <div class="col-4">
+                
+                <p-inputMask type="text" name="mobile" mask="+99 99-999-9999" [autoClear]="false"
+                    placeholder="+99 999 999-999" [(ngModel)]="user.mobile" [styleClass]="'form-control'"
+                    #fmobile="ngModel" required></p-inputMask>
+                <p class="info-message text-danger"
+                    *ngIf="(!user.mobile || user.mobile?.length < 12)  && (fLogin.submitted || fmobile.touched || fmobile.dirty)">
+                    This is a mandatory field</p>
+                    <p class="info-message text-danger"
+                    *ngIf="user.mobile?.indexOf('_') > 0 ">
+                    A valid mobile number is required.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-2">
+                <label class="font-weight-bold">NIC *</label>
+            </div>
+            <div class="col-4">
+                <p-inputMask type="text" style="padding: 0px !important;" name="nic" name="password"
+                    [(ngModel)]="user.nic" mask="999999999a?99" characterPattern="[vVxX0-9]" [autoClear]="false"
+                    placeholder="+99 999 999-999" [styleClass]="'form-control'" #fnic="ngModel"
+                    placeholder="Enter the nic" required></p-inputMask>
+                <p class="info-message text-danger"
+                    *ngIf="!user.nic  && (fLogin.submitted || fnic.touched || fnic.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div>
+
+            <p class="info-message text-danger offset-2 col-4" *ngIf="fLogin.submitted && !fLogin.valid">
+                One or more mandatory fields should be filled before save action.</p>
+        </div>
+
+
+
+        <div class="row">
+            <div class="d-flex col-1 justify-content-start">
+                <button class="btn btn-secondary text-uppercase ml-15 btn-lg" (click)="onBackClick()">Back</button>
+            </div>
+            <div class="d-flex offset-2 col-1 justify-content-end p-button-vertical mb-0 pl-2">
+                <button *ngIf="!isNewUser"  [disabled]="user.canNotDelete == true"  class="btn btn-warning text-uppercase " type="button" (click)="onDeleteClick()"
+                    >Delete</button>
+            </div>
+            <div class="col-2 d-flex justify-content-end ml-4">
+               
+                    <button [disabled]="coreatingUser || user.canNotDelete == true"  class="btn btn-primary text-uppercase btn-lg"
+                        type="submit">Save</button>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="coreatingUser" class="d-flex col-6 justify-content-end">
+                <p class="info-message text-warning   mt-2" *ngIf="true">
+                    please wait a moment...</p>
+            </div>
+        </div>
+    </form>
+
+
+
+
+</div>
+
+<!-- <app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert> -->
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

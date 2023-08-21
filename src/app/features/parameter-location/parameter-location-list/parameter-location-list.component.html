@@ -1,0 +1,163 @@
+<div class="wrapper m-4">
+    <div>
+        <h4>Manage parameters</h4>
+        <hr />
+    </div>
+    <div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">Data-Source</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchDSDropdown" [options]="institutions" [(ngModel)]="searchIns"
+                    #finsdropdown="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!institutions || institutions.length == 0" placeholder="Select .." optionLabel="name">
+                </p-dropdown>
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">Province</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchProvinceDropdown" [options]="provinces" [(ngModel)]="searchProvince"
+                    #fprovince="ngModel" [showClear]="true" (onChange)="onChangeProvince()" placeholder="Select .."
+                    optionLabel="name" styleClass="custom"></p-dropdown>
+
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">District</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchDDropdown" [options]="searchProvince ? districts : districtsAll"
+                    [(ngModel)]="searchDistrict" #fdistricts="ngModel" [filter]="true" [showClear]="true"
+                    (onChange)="onChangeDistrict()" placeholder="Select .." optionLabel="name"></p-dropdown>
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">Divisional Secretariat</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchDSDropdown" [options]="divisionalSecretariats" [(ngModel)]="searchDS"
+                    #fdistricts="ngModel" [filter]="true" [showClear]="true" placeholder="Select .." optionLabel="name">
+                </p-dropdown>
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">CC Data Category</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchCDC" [options]="climateChangeDataCategorys" [(ngModel)]="searchCCDC"
+                    #fprovince="ngModel" [showClear]="true" placeholder="Select .." optionLabel="name"
+                    styleClass="custom" (onChange)="onChangeCCD()">
+                </p-dropdown>
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">Sector</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchSectorropdown" [options]="sectors" [(ngModel)]="searchSector"
+                    #fdistricts="ngModel" [filter]="true" [showClear]="true" placeholder="Select .." optionLabel="name">
+                </p-dropdown>
+            </div>
+            <!-- <div class="col-1 d-flex align-items-center">
+                <label class="font-weight-bold">Sub Sector</label>
+            </div>
+            <div class="col-2">
+                <p-dropdown name="searchsubSectorSDropdown" [options]="subSectors" [(ngModel)]="searchSubSector"
+                    #finsdropdown="ngModel" [filter]="true" [showClear]="true"
+                    [disabled]="!subSectors || subSectors.length == 0" placeholder="Select .." optionLabel="name">
+                </p-dropdown>
+            </div> -->
+        </div>
+        <div class="form-row align-items-center mb-4">
+            <div class="col-auto col-6">
+                <input class="form-control p-3"  maxlength="256" [(ngModel)]="searchName" pInputText
+                (keydown)="onKeydown($event)" placeholder="search by name">
+            </div>
+            <!-- <div class="col-auto">
+                <input class="form-control p-3" type="text" [(ngModel)]="SearchDescription" pInputText
+                    placeholder="search by description">
+            </div> -->
+
+            <div class="col-auto">
+                <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                    styleClass="p-button-warn"></button>
+            </div>
+            <div class="col-2">
+
+                <button type="button" (click)="new()" pButton pRipple icon="pi pi-plus"
+                    styleClass="p-button-warn"></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+    <div *ngIf="paramterLocations?.length == 0" class="m-4 text-warning">
+        <p>No records found</p>
+    </div>
+
+    <p-table [value]="paramterLocations" [lazy]="true" (onLazyLoad)="load($event)" [paginator]="true" [rows]="rows"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:30%">Name</th>
+                <th>CC Data Category</th>
+                <th>Sector</th>
+                <!-- <th>Description</th> -->
+                <!-- <th>Project/Programme</th> -->
+                <th>Location</th>
+                <!-- <th >Is National</th> -->
+                <!-- <th >Province</th> -->
+                <!-- <th >District</th> -->
+                <!-- <th >D.S</th> -->
+                <th>Frequency</th>
+                <th>Data Source</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-parameterLocation>
+            <tr>
+                <td pTooltip="{{parameterLocation.parameter?.name}} : {{parameterLocation.parameter?.description}}" tooltipPosition="top" class="tbl-cell-description">
+                    {{parameterLocation.parameter?.name}}
+                    <!-- <a class="text-break" [routerLink]="['/parameter']"
+                        [queryParams]="{id: parameterLocation.parameter?.id}" target="_blank">
+                        {{parameterLocation.parameter?.name}}</a> -->
+                </td>
+                <!-- <td  pTooltip="{{parameterLocation.parameter.name}}"  tooltipPosition="top" class="tbl-cell-description">{{parameterLocation.parameter.name}}</td> -->
+                <td>{{parameterLocation.parameter.climateChangeDataCategory.name}}</td>
+                <td>{{parameterLocation.parameter.sector.name}}</td>
+                <!-- <td>
+                    {{parameterLocation.isNational ? "National" : ""}} 
+                    
+                </td> -->
+                <!-- <td  pTooltip="{{parameterLocation.parameter.name}}"  tooltipPosition="top" class="tbl-cell-description">{{parameterLocation.parameter.name}}</td> -->
+                <td>{{parameterLocation.isNational ? "National" : ""}}
+                    {{parameterLocation.province? "Province: "+ parameterLocation.province?.name : ""}}
+                    {{parameterLocation.district? "District: "+ parameterLocation.district?.name : ""}}
+                    {{parameterLocation.divisionalSecretariat? "D.S: "+ parameterLocation.divisionalSecretariat?.name :
+                    ""}}
+                </td>
+                <!-- <td >{{parameterLocation.isNational ? "National" : ""}}</td> -->
+                <!-- <td>{{parameter.projectType?.name}}</td> -->
+                <!-- <td >{{parameterLocation.province?.name}}</td> -->
+                <!-- <td >{{parameterLocation.district?.name}}</td> -->
+                <!-- <td >{{parameterLocation.divisionalSecretariat?.name}}</td> -->
+                <td>{{parameterLocation.parameter.frequency?.name}}</td>
+                <td pTooltip="{{parameterLocation.dataSource?.name}}" class="tbl-cell-description">
+                    {{parameterLocation.dataSource?.name}}
+                </td>
+                <td>
+                    <!-- <button pButton type="button" (click)="edit(parameter)" label="Edit"
+                        class="p-button-link"></button> -->
+                        <a class="text-break" [routerLink]="['/parameter']"
+                        [queryParams]="{id: parameterLocation.parameter?.id}" target="_blank">
+                        Edit</a>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+</div>

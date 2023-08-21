@@ -1,0 +1,17 @@
+:host ::ng-deep .p-cell-editing {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.tbl-hdr-cell-small {
+  padding: 0.5rem 0.1rem !important;
+}
+
+.tbl-cell-small {
+  padding: 0.1rem 0.1rem !important;
+}
+
+.editable-cell-input {
+  width: 90% !important;
+  height: 30px !important;
+}

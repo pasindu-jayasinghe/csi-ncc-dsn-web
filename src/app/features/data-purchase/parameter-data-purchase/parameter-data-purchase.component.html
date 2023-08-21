@@ -1,0 +1,343 @@
+<div class="wrapper m-4">
+    <p-toast position="top-right" key="msg" class="p-toast-message-custom"></p-toast>
+    <div class="d-flex justify-content-start align-content-center flex-wrap mb-4">
+        <div class="col-4 d-flex justify-content-start align-items-center">
+            <h4>Climate change data</h4>
+        </div>
+        <div class="col-8 d-flex justify-content-end align-items-center">
+            <div>
+                <button pButton pRipple type="button" icon="pi pi-shopping-cart"
+                    label="  {{totalItemsInCart > 0 ? totalItemsInCart + ' Item(s), Total - Rs.' + (totalValueOfCart | number:'1.2-2') : ''}}"
+                    class="p-button-text btn-shopping-cart" (click)="openCartItemPopup()"></button>
+
+            </div>
+            <!-- <div class="ml-4">
+                <button type="button" pButton pRipple label="Purchase"></button>
+            </div> -->
+            <div class="ml-4">
+                <button type="button" pButton pRipple label="Download Selected Free Data"
+                    (click)="onClickDownloadFreeData(cartItemList, false)"></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">CC Data Category</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown [options]="categories" [(ngModel)]="searchBy.category" [filter]="true" [showClear]="true"
+                placeholder="Select .." optionLabel="name" (onChange)="onChangeCCD()"></p-dropdown>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">Sector</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown [options]="sectors" [(ngModel)]="searchBy.sector" [filter]="true" [showClear]="true"
+                placeholder="Select .." optionLabel="name"></p-dropdown>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">From Date</label>
+        </div>
+        <div class="col-2">
+            <p-calendar [(ngModel)]="searchBy.fromDate" showButtonBar="true" [showIcon]="true" [monthNavigator]="true"
+                [yearNavigator]="true" yearRange="1900:2200">
+            </p-calendar>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">To Date</label>
+        </div>
+
+        <div class="col-2">
+            <p-calendar [(ngModel)]="searchBy.toDate" showButtonBar="true" [showIcon]="true" [monthNavigator]="true"
+                [yearNavigator]="true" yearRange="2000:2100">
+            </p-calendar>
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">Province</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown [options]="provinces" [(ngModel)]="searchBy.province" [filter]="true" [showClear]="true"
+                placeholder="Select .." optionLabel="name" (onChange)="onChangeProvince()"></p-dropdown>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">District</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown [options]="districts" [(ngModel)]="searchBy.district" [filter]="true" [showClear]="true"
+                placeholder="Select .." optionLabel="name" (onChange)="onChangeDistrict()"></p-dropdown>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">Divisional Secretariat</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown [options]="dsList" [(ngModel)]="searchBy.ds" [filter]="true" [showClear]="true"
+                placeholder="Select .." optionLabel="name"></p-dropdown>
+        </div>
+
+
+    </div>
+
+    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+        <div class="col-4">
+            <input class="form-control p-3" maxlength="256" type="text" [(ngModel)]="searchBy.name" pInputText
+                placeholder="search by parameter name">
+        </div>
+        <div class="col-1 justify-content-start d-flex align-items-center">
+            <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                styleClass="p-button-warn"></button>
+        </div>
+        <div class="col-5 justify-content-start d-flex align-items-center">
+            <p class="sample-data-value-txt">*$$$ commercial data, you need to purchase.</p>
+        </div>
+    </div>
+
+    <p-table [value]="dataList" [lazy]="true" (onLazyLoad)="loadDataList($event)" [(selection)]="selectedDataList"
+        dataKey="parameterDataId" [paginator]="true" [rows]="rows" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading" #DataTable>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 16rem">Parameter</th>
+                <th>Parameter Description</th>
+                <th>Location</th>
+                <th>Data Provider</th>
+                <th class="text-center">Value</th>
+                <th>Unit</th>
+                <th>Content</th>
+                <th>Valid Time Duration</th>
+                <th>Commercial / Free Data</th>
+                <!-- <th>Commercial Value</th> -->
+                <th style="width: 10rem; text-align: center;">
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record>
+            <tr>
+                <td pTooltip="{{record.name}}" tooltipPosition="top">{{record.name}}</td>
+                <td pTooltip="{{record.description}}" tooltipPosition="top" class="tbl-cell-description">{{record.description}}</td>
+                <td>
+                    {{record.location.isNational ? "National" : ""}}
+                    {{record.location.province? "Province: "+ record.location.province : ""}}
+                    {{record.location.district? "District: "+ record.location.district : ""}}
+                    {{record.location.ds? "D.S: "+ record.location.ds : ""}}
+                </td>
+                <td>{{record.dataProvider}}</td>
+                <td>
+                    <div class="text-center" *ngIf="record.parameterDataType?.id == 1"
+                        [ngClass]="{'sample-data-value-txt': !record.isPublicData}">
+
+                        <!-- {{record.isPublicData ? (record.value | number:'1.0-6') : isNumber(record.value) ?
+                        "*"+(record.value
+                        | number:'1.0-6') : "*"+ record.value}} -->
+
+                        {{record.isPublicData ? (record.value | number:'1.0-6') : '$$$'}}
+
+                    </div>
+                    <div class="text-center" *ngIf="record.parameterDataType?.id !== 1" pTooltip="Not Applicable">
+                        N/A
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="record.parameterDataType?.id == 1">
+                        {{record.unit}}
+                    </div>
+                    <div *ngIf="record.parameterDataType?.id !== 1" pTooltip="Not Applicable">
+                        N/A
+                    </div>
+                </td>
+
+                <td>
+                    <div *ngIf="record.parameterDataType && record.parameterDataType?.id == 2">
+                        <button pButton pRipple type="button" icon="pi pi-info"
+                            class="p-button-rounded p-button-outlined custom-btn-info ml-2"
+                            (click)="showDataDialog(record)"></button>
+                    </div>
+
+                    <div *ngIf="record.parameterDataType?.id !== 2" pTooltip="Not Applicable">
+                        N/A
+                    </div>
+
+                </td>
+                <td>{{record.validTimeDuration}}</td>
+                <td class="tbl-cell-description"
+                pTooltip="{{record.isPublicData ? 'Free' : ('Rs.' +
+                record.commercialValue.toFixed(2) + ' '  ) }}" tooltipPosition="top"
+                >{{record.isPublicData ? "Free" : ("Rs." +
+                    record.commercialValue.toFixed(2) + " " ) }}</td>
+                <!-- <td>{{!record.isPublicData ? ("Rs." + record.commercialValue.toFixed(2) + " " + record.frequency) : ""}}
+                </td> -->
+                <td style="text-align: center;">
+                    <button *ngIf="''+ record.isInActiveCart == 'false'" pButton type="button" (click)="onClickAddToCart(record)"
+                        label="Add To Cart" class="p-button-link"></button>
+                    <button *ngIf="'' + record.isInActiveCart == 'true'" pButton type="button" class="p-button-link"
+                        label="Remove From Cart"
+                        (click)="onClickRemoveFromCart(record.parameterDataId, record)"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="displayDataDialog" [style]="{width: '55vw'}" [draggable]="false">
+    <p-header>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">Parameter Name:</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData?.name}}
+            </div>
+        </div>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">Location</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData.location?.isNational ? "National" : ""}}
+                {{selectedRowToDisplayData.location?.province? "Province: "+ selectedRowToDisplayData.location.province
+                :
+                ""}}
+                {{selectedRowToDisplayData.location?.district? "District: "+ selectedRowToDisplayData.location.district
+                :
+                ""}}
+                {{selectedRowToDisplayData.location?.ds? "D.S: "+ selectedRowToDisplayData.location.ds : ""}}
+            </div>
+        </div>
+        <div class="d-flex flex-row justify-content-start">
+            <div>
+                <label class="font-weight-bold">From - To:</label>
+            </div>
+            <div class="ml-4">
+                {{selectedRowToDisplayData.validTimeDuration}}
+            </div>
+        </div>
+    </p-header>
+    <div class="row">
+        <div class="col-md-12">
+            <label class="font-weight-bold">Content Comment</label>
+            <hr />
+            <div class="custom-dialog-content">{{selectedRowToDisplayData?.contentComment}}</div>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="selectedRowToDisplayData">
+        <div class="col-md-12">
+            <label class="font-weight-bold">Documents</label>
+            <hr />
+            <app-document-upload [(doucmentList)]="selectedRowToDisplayData.documentList"
+                [documentOwner]="documentsDocumentOwner" [documentOwnerId]="selectedRowToDisplayData.parameterDataId"
+                [isNew]="false" [showUpload]="false">
+            </app-document-upload>
+        </div>
+    </div>
+    <p-footer>
+        <button pButton class="p-button-text" label="OK" (click)="displayDataDialog = false;"></button>
+    </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="displayCartItemsDialog" [style]="{width: '55vw'}" [draggable]="false">
+    <p-header>
+        <div class="row d-flex justify-content-start align-content-center flex-wrap">
+            <div class="col-6 d-flex justify-content-start">
+                <div>
+                    <label class="font-weight-bold">{{totalItemsInCart}}</label> Item(s) in cart
+                </div>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <div>
+                    Cart Subtotal: <label class="font-weight-bold">Rs.{{totalValueOfCart.toFixed(2)}}</label>
+                </div>
+            </div>
+        </div>
+    </p-header>
+    <div>
+        <div class="d-flex justify-content-end align-content-center">
+            <div>
+                <button [disabled]="totalValueOfCart ==  0" type="button" (click)="onPurchase()" pButton pRipple
+                    label="Purchase"></button>
+            </div>
+            <div class="ml-4">
+                <button type="button" pButton pRipple label="Download Selected Free Data"
+                    (click)="onClickDownloadFreeData(cartItemList, false)"></button>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p-table [value]="cartItemList" [loading]="loadingOnPopup">
+                <ng-template pTemplate="body" let-record>
+                    <tr>
+                        <td style="width: 30%" pTooltip="{{record.parameterName}}" tooltipPosition="top"
+                            class="tbl-cell-description">
+                            {{record.parameterName}}
+                        </td>
+                        <td style="width: 30%">
+                            {{record.location?.isNational ? "National" : ""}}
+                            {{record.location?.province? "Province: "+ record.location.province : ""}}
+                            {{record.location?.district? "District: "+ record.location.district : ""}}
+                            {{record.location?.ds? "D.S: "+ record.location.ds : ""}}
+                        </td>
+                        <td>{{'Rs.'+ record.price.toFixed(2)}}</td>
+                        <td style="text-align: center;">
+                            <button pButton type="button" class="p-button-link" label="Remove From Cart"
+                                (click)="onClickRemoveFromCart(record.parameterLocationDataId, null)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+        </div>
+    </div>
+    <p-footer>
+        <button pButton class="p-button-text" label="OK" (click)="displayCartItemsDialog = false;"></button>
+    </p-footer>
+</p-dialog>
+
+
+<p-dialog [(visible)]="displayuserDataTypeDialog" [style]="{width: '40vw' }" [draggable]="false">
+    <p-header>
+        <div class="row d-flex justify-content-start align-content-center flex-wrap">
+            <div class="col-12 d-flex justify-content-start">
+                <div>
+                    <label class="font-weight-bold">Welcome to National Climate Change Data Sharing Network of the Ministry of Environment Sri Lanka.</label>
+                    <label class="">Kindly indicate your purpose of visiting this data repository for record keeping purposes.</label>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-8 mt-4">
+            <p-dropdown [options]="dataUsageCategoryList" [baseZIndex]="1100" [(ngModel)]="selectedUsageCategory"
+                placeholder="Select .." optionLabel="name"></p-dropdown>
+        </div>
+    </p-header>
+    <div>
+        <!-- <div  class="d-flex justify-content-start align-content-center flex-wrap mt-2" style="height: 200px;">
+            <div class="col-4 d-flex align-items-center">
+                <label class="font-weight-bold">Usage Category</label>
+            </div>
+            <div class="col-8 ">
+                <p-dropdown [options]="dataUsageCategoryList" [baseZIndex]="1100" [(ngModel)]="selectedUsageCategory" 
+                     placeholder="Select .." optionLabel="name"></p-dropdown>
+            </div>
+
+        </div> -->
+
+    </div>
+    <p-footer>
+
+
+        <div class="d-flex justify-content-end align-content-center flex-wrap mb-15">
+            <button [disabled]="!selectedUsageCategory?.id" pButton
+                class="btn btn-primary btn-block text-uppercase btn-lg" label="Save"
+                (click)="updateUserDataType()"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '40vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>

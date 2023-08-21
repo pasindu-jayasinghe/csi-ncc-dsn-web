@@ -1,0 +1,471 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+
+        <h4>{{isNew ? "Create" : "Edit" }} {{alertHeader}}</h4>
+        <hr />
+    </div>
+    <p-tabView [(activeIndex)]="activeTabIndex">
+        <p-tabPanel header="Parameter Setup">
+            <div novalidate class="m-4">
+                <form #fData="ngForm" (ngSubmit)="saveForm(fData)">
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Name *</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" name="name" maxlength="256" class="form-control input-lg"
+                                autocomplete="off" [(ngModel)]="parameter.name" #fn="ngModel" placeholder="Enter name"
+                                (ngModelChange)="onnameKeyDown($event)" required
+                                [pattern]="'^[a-zA-Z0-9 -,.]{1,256}$'" />
+                            <p class="info-message text-danger"
+                                *ngIf="fn.invalid  && (fData.submitted || fn.touched || fn.dirty)">
+                                This is a mandatory field, max length is limited to 256 and can only contains
+                                Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="relatedParam !== undefined && relatedParam !== null && relatedParam?.length > 0"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <!-- <label class="font-weight-bold">Related Param</label> -->
+                        </div>
+                        <div class="col-8">
+                            <div mb-5 class="font-weight-bold font-italic"> Similar Parameters </div>
+                            <h1></h1>
+                            <div *ngFor="let p of relatedParam">
+                                {{p.name}}
+                                <a class="text-break font-weight-light ml-20" [routerLink]="['/parameter']"
+                                    [queryParams]="{id: p.id}" target="_blank"> View</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Description *</label>
+                        </div>
+                        <div class="col-8">
+                            <textarea name="descriptionpd" pInputTextarea style="width:100%;" class="form-control"
+                                [rows]="5" [cols]="30" [(ngModel)]="parameter.description" #fd="ngModel" required
+                                [pattern]="'^[a-zA-Z0-9 -,.]{1,2500}$'" maxlength="2500"></textarea>
+                            <p class="info-message text-danger"
+                                *ngIf="fd.invalid  && (fData.submitted || fd.touched || fd.dirty)">
+                                This is a mandatory field, max length is limited to 2500 and can only contains
+                                Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Description escaped for SLCERT verification *</label>
+                        </div>
+                        <div class="col-8">
+                            <div [innerHTML]="parameter.description"></div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Data Type *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="datatype" [options]="datatypes" [(ngModel)]="parameter.parameterDataType"
+                                #fdt="ngModel" placeholder="Select .." optionLabel="name" required>
+                            </p-dropdown>
+
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.parameterDataType?.id && (fData.submitted || fdt.touched || fdt.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="parameter.parameterDataType?.id == 1"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Unit of Measure *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="iocategory" [options]="uoms" [(ngModel)]="parameter.unitOfMeasure"
+                                #fuom="ngModel" placeholder="Select .." optionLabel="name" [filter]="true"
+                                required="parameter.parameterDataType?.id == 1">
+                            </p-dropdown>
+
+                            <p class="info-message text-danger"
+                                *ngIf="parameter.parameterDataType?.id == 1 && !parameter.unitOfMeasure?.id  && (fData.submitted || fuom.touched || fuom.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="parameter.parameterDataType?.id == 1"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Sample Value *</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" maxlength="256" name="namesv" class="form-control"
+                                [(ngModel)]="parameter.sampleParamterReading" #fspr="ngModel"
+                                placeholder="Enter sample parameter value" />
+                            <p class="info-message text-danger"
+                                *ngIf="parameter.parameterDataType?.id == 1 &&  !isSampleValuevalid() && (fData.submitted || fspr.touched || fspr.dirty)">
+                                This is a mandatory field, which should be not less than Min Value and not greater than
+                                Max Value.</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            {{ parameter.unitOfMeasure.name?
+                            "("+parameter.unitOfMeasure.name+")"
+                            :"" }}
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="parameter.parameterDataType?.id == 1"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Min Value</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" maxlength="256" name="nameminv" class="form-control"
+                                [(ngModel)]="parameter.minSampleValue" placeholder="Enter min parameter value" />
+
+
+                        </div>
+                        <div class="d-flex align-items-center">
+                            {{ parameter.unitOfMeasure.name?
+                            "("+parameter.unitOfMeasure.name+")"
+                            :"" }}
+                        </div>
+                    </div>
+
+                    <div *ngIf="parameter.parameterDataType?.id == 1"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Max Value</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" maxlength="256" name="namemx" class="form-control"
+                                [(ngModel)]="parameter.maxSampleValue" placeholder="Enter max parameter value" />
+                        </div>
+                        <div class="d-flex align-items-center">
+                            {{ parameter.unitOfMeasure.name?
+                            "("+parameter.unitOfMeasure.name+")"
+                            :"" }}
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Climate Change Data Category *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="ccdcategory" [options]="ccdcategory"
+                                [(ngModel)]="parameter.climateChangeDataCategory" #fccdc="ngModel"
+                                placeholder="Select .." optionLabel="name" [filter]="true" (onChange)="onChangeCCD()"
+                                required></p-dropdown>
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.climateChangeDataCategory?.id  && (fData.submitted || fccdc.touched || fccdc.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Sector *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="sector" [options]="sectors" [(ngModel)]="parameter.sector" #fs="ngModel"
+                                placeholder="Select .." optionLabel="name" [filter]="true" (onChange)="onChangeSector()"
+                                required></p-dropdown>
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.sector?.id  && (fData.submitted || fs.touched || fs.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Climate Impact</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="clImpact" [options]="climateImpacts" [(ngModel)]="parameter.climateImpact"
+                                #cidc="ngModel" placeholder="Select .." optionLabel="name"></p-dropdown>
+                            <!-- <p class="info-message text-danger"
+                                *ngIf="!parameter.climateImpact?.id  && (fData.submitted || cidc.touched || cidc.dirty)">
+                                This is a mandatory field</p> -->
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Sub Sector *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="subsector" [options]="subSectors" [(ngModel)]="parameter.subSector"
+                                #fss="ngModel" placeholder="Select .." optionLabel="name" [filter]="true"
+                                [disabled]="!subSectors || subSectors.length == 0" required></p-dropdown>
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.subSector?.id  && (fData.submitted || fss.touched || fss.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Sector MoE *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="sectormoe" [options]="sectorMOEs" [(ngModel)]="parameter.sectorMoE"
+                                #fsmoe="ngModel" placeholder="Select .." optionLabel="name" [filter]="true" required>
+                            </p-dropdown>
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.sectorMoE?.id  && (fData.submitted || fsmoe.touched || fsmoe.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div> -->
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Frequency *</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="frequency" [options]="frequencies" [(ngModel)]="parameter.frequency"
+                                #ffz="ngModel" placeholder="Select .." optionLabel="name" [filter]="true" required
+                                (onChange)="onfrequency()">
+                            </p-dropdown>
+                            <p class="info-message text-danger"
+                                *ngIf="!parameter.frequency?.id  && (fData.submitted || ffz.touched || ffz.dirty)">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-center">
+                            <label class="font-weight-bold">Deadline</label>
+                        </div>
+                        <div class="col-4">
+                            <p-dropdown name="deadline" [options]="deadlines" [(ngModel)]="parameter.deadline"
+                                placeholder="Select .." optionLabel="name" [disabled]="true"></p-dropdown>
+
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="d-flex col-12">
+                            <div class="mb-2">
+                                It may be prudent to consult the relevant institution regarding the exposure of data.
+                            </div>
+                        </div>
+                        <div class="col-2 d-flex align-items-left">
+                            <label class="font-weight-bold">Data Availability</label>
+
+                        </div>
+                        <div class="col-6">
+                            <p-radioButton name="groupnameda" [value]="true" [(ngModel)]="parameter.isPublicData"
+                                label="Public"></p-radioButton>
+                            <p-radioButton name="groupnameda" [value]="false" [(ngModel)]="parameter.isPublicData"
+                                label="Commercial " class="ml-4"></p-radioButton>
+                            <p-radioButton name="groupnameda" [value]="null" label="Confidential"
+                                [(ngModel)]="parameter.isPublicData" class="ml-4"></p-radioButton>
+                        </div>
+                        <div class="col-6">
+                            <p class="info-message text-danger"
+                                *ngIf="parameter.isPublicData === undefined && fData.submitted">
+                                This is a mandatory field</p>
+                        </div>
+
+                    </div>
+                    <div *ngIf="parameter.isPublicData == false"
+                        class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                        <div class="col-2 d-flex align-items-left">
+                            <label class="font-weight-bold">Commercial value of the parameter per year(Rs)</label>
+                        </div>
+                        <div class="col-4">
+                            <p-inputNumber name="derationNUm" [(ngModel)]="parameter.commercialValue" [step]="1"
+                                [min]="1" [max]="1000000" mode="decimal" [minFractionDigits]="2" #cv="ngModel">
+                            </p-inputNumber>
+                            <p class="info-message text-danger"
+                                *ngIf=" parameter.isPublicData == false && parameter.commercialValue <= 0">
+                                This is a mandatory field</p>
+                        </div>
+                    </div>
+
+
+                    <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                            <div class="col-2 d-flex align-items-center">
+                                <p-checkbox name="projectcb" [binary]="true" [(ngModel)]="parameter.isProject"></p-checkbox>
+                                <label class="font-weight-bold ml-4">Project</label>
+                            </div>
+                            <div class="col-4">
+                                <p-dropdown [disabled]="!parameter.isProject" name="projectddl"
+                                    [options]="projectProgrammes" [(ngModel)]="parameter.project" #fproject="ngModel"
+                                    placeholder="Select .." optionLabel="name" [filter]="true"></p-dropdown>
+                                <p class="info-message text-danger"
+                                    *ngIf="!parameter.project?.id  && parameter.isProject && (  fData.submitted || fproject.touched || fproject.dirty)">
+                                    This is a mandatory field</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                            <div class="col-2 d-flex align-items-center">
+                                <p-checkbox name="programmecb" [binary]="true" [(ngModel)]="parameter.isProgramme">
+                                </p-checkbox>
+                                <label class="font-weight-bold ml-4">Programme</label>
+                            </div>
+                            <div class="col-4">
+                                <p-dropdown [disabled]="!parameter.isProgramme" name="programmeddl"
+                                    [options]="projectProgrammes" [(ngModel)]="parameter.programme" #fprogramme="ngModel"
+                                    placeholder="Select .." optionLabel="name" [filter]="true"></p-dropdown>
+                                <p class="info-message text-danger"
+                                    *ngIf="!parameter.programme?.id  && parameter.isProgramme &&  (fData.submitted || fprogramme.touched || fprogramme.dirty)">
+                                    This is a mandatory field</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+                            <div class="col-2 d-flex align-items-center">
+                                <p-checkbox name="policycb" [binary]="true" [(ngModel)]="parameter.isPolicy"></p-checkbox>
+                                <label class="font-weight-bold ml-4">Policy</label>
+                            </div>
+                            <div class="col-4">
+
+                                <p-dropdown [disabled]="!parameter.isPolicy" name="policyddl" [options]="policies"
+                                    [(ngModel)]="parameter.policy" #fpolicy="ngModel" placeholder="Select .."
+                                    optionLabel="name" [filter]="true"></p-dropdown>
+                                <p class="info-message text-danger"
+                                    *ngIf="!parameter.policy?.id  && !!parameter.isPolicy && (fData.submitted || fpolicy.touched || fpolicy.dirty)">
+                                    This is a mandatory field</p>
+                            </div>
+                        </div> -->
+
+
+
+                    <div *ngIf="isNew" class="m-3 text-warning">
+                        Save parameter record to start location mapping and data source mapping.
+                    </div>
+                    <!-- <div>
+                        {{fData.errors != null  && fData.errors[0] | json}}
+                    </div> -->
+
+                    <div class="ml-3">
+                        <p class="info-message text-danger"
+                            *ngIf="fData.submitted && (!fData.valid || !parameter.parameterDataType?.id ||  (parameter.parameterDataType?.id == 1 && !parameter.unitOfMeasure.id))">
+                            One or more mandatory fields should be filled before save action.</p>
+                    </div>
+
+                    <div class="d-flex justify-content-start align-content-center flex-wrap mt-4">
+                        <div class="col-3 d-flex justify-content-start">
+                            <button class="btn btn-secondary btn-block text-uppercase col-4"
+                                (click)="onBackClick()">Back</button>
+
+                        </div>
+                        <div class="col-4 d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-end p-button-vertical">
+                                <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+                                <button class="btn btn-warning btn-block text-uppercase" type="button"
+                                    (click)="onDeleteClick()" *ngIf="!isNew">Delete</button>
+                            </div>
+                            <div class="col-6 d-flex">
+                                <button [disabled]="isSaving" class="btn btn-primary btn-block text-uppercase btn-lg"
+                                    type="submit">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Location & Source Setup">
+            <div *ngIf="isNew" class="mt-4 text-warning">
+                Complete "Parameter Setup" before location mapping and data source mapping.
+            </div>
+            <div class="mt-4">
+                <h6>Parameter : {{parameter.name}}</h6>
+            </div>
+            <div class="mt-4">
+                <h4>Location Setup</h4>
+                <hr />
+            </div>
+
+            <!-- dataCollectionLocation  -->
+
+            <div class="d-flex justify-content-start align-content-left flex-wrap mb-15">
+                <div class="col-2 d-flex align-items-left">
+                    <label class="font-weight-bold">Location of data collection</label>
+                </div>
+                <div class="col-10">
+                    <p-radioButton [disabled]="paramterLocationsAvailable" name="locgroupname" value="1"
+                        [(ngModel)]="parameter.dataCollectionGeography" label="National"></p-radioButton>
+                    <p-radioButton [disabled]="paramterLocationsAvailable" name="locgroupname" class="ml-4" value="5"
+                        [(ngModel)]="parameter.dataCollectionGeography" label="Specific Location"></p-radioButton>
+                    <p-radioButton [disabled]="paramterLocationsAvailable" name="locgroupname" class="ml-4" value="2"
+                        [(ngModel)]="parameter.dataCollectionGeography" label="Province(s)"></p-radioButton>
+                    <p-radioButton [disabled]="paramterLocationsAvailable" name="locgroupname" class="ml-4" value="3"
+                        [(ngModel)]="parameter.dataCollectionGeography" label="District(s)"></p-radioButton>
+                    <p-radioButton [disabled]="paramterLocationsAvailable" name="locgroupname" class="ml-4" value="4"
+                        [(ngModel)]="parameter.dataCollectionGeography" label="Divisional Secretariat(s)">
+                    </p-radioButton>
+                    <!-- <p class="info-message text-danger"
+                    *ngIf="!parameter.policy?.id  && (!!parameter.isPolicy || fData.submitted || fpolicy.touched || fpolicy.dirty)">
+                    This is a mandatory field</p> -->
+                </div>
+            </div>
+            <div *ngIf="!isNew" class="d-flex justify-content-start align-content-left flex-wrap">
+                <div *ngIf="parameter.dataCollectionGeography != 1 && parameter.dataCollectionGeography != 5"
+                    class="col-12 d-flex align-items-left mb-4">
+                    <b>Please select one, mutiple or all location(s). </b>
+                </div>
+                <div *ngIf="parameter.dataCollectionGeography == 5" class="col-12 d-flex align-items-left mb-4">
+                    <b>Specify the location name</b>
+                </div>
+
+                <app-parameter-location [paramter]="parameter">
+                </app-parameter-location>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Documents">
+            <div *ngIf="isNew" class="mt-4 text-warning">
+                Complete "Parameter Setup" before upload documents.
+            </div>
+            <div *ngIf="!isNew" class="mt-4">
+                <h6>Parameter : {{parameter.name}}</h6>
+
+                <div class="d-flex justify-content-start align-content-center flex-wrap pl-0">
+                    <div class="col-12 d-flex align-items-center pl-0">
+                        <app-document-upload [doucmentList]="documentList" [documentOwner]="documentsDocumentOwner"
+                            [documentOwnerId]="parameter.id" [isNew]="isNew" [showDeleteButton]="true">
+                        </app-document-upload>
+                    </div>
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-start align-content-center flex-wrap mt-4 pl-0">
+                <div class="col-3 d-flex justify-content-start  pl-0">
+                    <button class="btn btn-secondary btn-block text-uppercase col-4"
+                        (click)="onBackClick()">Back</button>
+
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+
+    <p-dialog header="Parameter" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}"
+        [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+        <div class="p-m-0">
+            {{displayMessage}}
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button (click)="onSaveSucessOk()" label="Ok" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-dialog>
+
+
+</div>
+
+<app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert>

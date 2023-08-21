@@ -1,0 +1,105 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+        <h4> Parameters</h4>
+        <hr />
+    </div>
+
+    <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+
+        <div class="col-2 d-flex align-items-center">
+            <label class="font-weight-bold">Climate Change Data Category</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown name="searchCDC" [options]="climateChangeDataCategorys" [(ngModel)]="searchCCDC"
+                #fprovince="ngModel" [showClear]="true" placeholder="Select .." optionLabel="name" styleClass="custom"
+                (onChange)="onChangeCCD()">
+            </p-dropdown>
+        </div>
+        <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">Sector</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown name="searchSectorropdown" [options]="sectors" [(ngModel)]="searchSector" #fdistricts="ngModel"
+                [filter]="true" [showClear]="true" (onChange)="onChangeSector()" placeholder="Select .."
+                optionLabel="name"></p-dropdown>
+        </div>
+        <!-- <div class="col-1 d-flex align-items-center">
+            <label class="font-weight-bold">Sub Sector</label>
+        </div>
+        <div class="col-2">
+            <p-dropdown name="searchsubSectorSDropdown" [options]="subSectors" [(ngModel)]="searchSubSector"
+                #finsdropdown="ngModel" [filter]="true" [showClear]="true"
+                [disabled]="!subSectors || subSectors.length == 0" placeholder="Select .." optionLabel="name">
+            </p-dropdown>
+        </div> -->
+    </div>
+
+    <div class="form-row align-items-center mb-4">
+        <div class="col-auto col-6">
+            <input class="form-control p-3" type="text" maxlength="256" [(ngModel)]="searchName" pInputText
+                placeholder="search by name">
+        </div>
+        <!-- <div class="col-auto">
+            <input class="form-control p-3" type="text" [(ngModel)]="SearchDescription" pInputText
+                placeholder="search by description">
+        </div> -->
+
+        <div class="col-auto">
+            <button type="button" (click)="search()" pButton pRipple icon="pi pi-search"
+                styleClass="p-button-warn"></button>
+        </div>
+        <div class="col-2">
+
+            <button type="button" (click)="new()" pButton pRipple icon="pi pi-plus" styleClass="p-button-warn"></button>
+        </div>
+    </div>
+
+
+    <p-table [value]="paramters" [lazy]="true" (onLazyLoad)="load($event)" [paginator]="true" [rows]="rows"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[1,10,25,50]" [totalRecords]="totalRecords" [loading]="loading">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <!-- <th>Description</th> -->
+                <!-- <th>Project/Programme</th> -->
+                <th>Climate Change Data Category</th>
+                <th>Sector</th>
+                <th>Location</th>
+                <!-- <th>Sub Sector</th> -->
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-parameter>
+            <tr>
+                <td pTooltip="{{parameter.name}} - {{parameter.description}}" tooltipPosition="top" class="tbl-cell-description">{{parameter.name}}
+                </td>
+                <!-- <td>{{parameter.description}}</td> -->
+                <!-- <td>{{parameter.projectType?.name}}</td> -->
+                <td>{{parameter.climateChangeDataCategory?.name}}</td>
+                <td>{{parameter.sector?.name}}</td>
+                <!-- <td>{{parameter.subSector?.name}}</td> -->
+                <td>
+                    {{parameter.dataCollectionGeography == 1 ? "National" :
+                    parameter.dataCollectionGeography == 2 ? "Province(s)" :
+                    parameter.dataCollectionGeography == 3 ? "District(s)" :
+                    parameter.dataCollectionGeography == 4 ? "Divisional Secretariat(s)" :
+                    parameter.dataCollectionGeography == 5 ? "Specific Locations" : ""}}
+                </td>
+
+
+
+
+                <td><button pButton type="button" (click)="edit(parameter)" label="Edit" class="p-button-link"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <!-- <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template> -->
+    </p-table>
+</div>

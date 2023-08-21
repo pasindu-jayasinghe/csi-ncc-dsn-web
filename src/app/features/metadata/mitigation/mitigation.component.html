@@ -1,0 +1,10 @@
+<div class="wrapper m-4">
+    <div>
+        <h4>Mitigation</h4>
+        <hr />
+    </div>
+    <app-master [itemlist]="itemlist" [totalRecords]="totalRecords" (onSearchClick)="search($event)"
+        (onSaveClick)="save($event)" [saveResponce]="eventsSubject.asObservable()">
+    </app-master>
+
+</div>

@@ -1,0 +1,205 @@
+<div class="wrapper m-4">
+    <div class="mb-4">
+        <h4>{{isNew ? "New" : "Edit" }} {{alertHeader}}</h4>
+        <div class="text-warning d-flex justify-content-start" *ngIf="policy.isPendingApprove == true">
+            <h6>
+                The policy is under pending approval.
+            </h6>
+        </div>
+
+        <hr />
+    </div>
+    <form #fData="ngForm" (ngSubmit)="saveForm(fData)" novalidate>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Name *</label>
+            </div>
+            <div class="col-8">
+                <input type="text" maxlength="256" name="name" class="form-control" [(ngModel)]="policy.name" #fn="ngModel"
+                    placeholder="Enter name" required  [pattern]="'^[a-zA-Z0-9  ,-.]{1,256}$'" (change)="nameChange()" (ngModelChange)="onnameKeyDown($event)" />
+                    <p class="info-message text-danger"
+                    *ngIf="fn.invalid  && (fData.submitted || fn.touched || fn.dirty)">
+                    This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+                <p class="info-message text-danger mt-2"
+                    *ngIf="exsistingPolicy && (fData.submitted || fn.touched || fn.dirty)">
+                    Policy already exists. Duplicate entries are not allowed.</p>
+            </div>
+        </div>
+        <div *ngIf="relatedItem !== undefined && relatedItem !== null && relatedItem?.length > 0"
+            class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <!-- <label class="font-weight-bold">Related Param</label> -->
+            </div>
+            <div class="col-8">
+                <div mb-5 class="font-weight-bold font-italic"> Similar Policys </div>
+                <h1></h1>
+                <div *ngFor="let p of relatedItem">
+                    {{p.name}}
+                    <a class="text-break font-weight-light ml-20" [routerLink]="['/policy']" [queryParams]="{id: p.id}"
+                        target="_blank"> View</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Climate Change Data Category *</label>
+            </div>
+            <div class="col-5">
+                <p-dropdown name="chdcDD" [options]="climateChangeDataCategories"
+                    [(ngModel)]="policy.climateChangeDataCategory" #chdcDD="ngModel" placeholder="Select .."
+                    optionLabel="name" (onChange)="onChangeCCD()" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!policy.climateChangeDataCategory?.id  && (fData.submitted || chdcDD.touched || chdcDD.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div> -->
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Climate Change Data Category *</label>
+            </div>
+            <div class="col-5">
+                <p-tree name="chdcDD"  [value]="treeDataCCD" selectionMode="checkbox" [(selection)]="selectedtreeDataCCD"
+                    (onNodeSelect)="onNodeSelect($event)" (onNodeUnselect)="onNodeUnSelect($event)"></p-tree>
+                <p class="info-message text-danger" *ngIf="isvalidCCdSector == false">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <!-- <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Sector *</label>
+            </div>
+            <div class="col-5">
+                <p-dropdown name="sectorDD" [options]="sectors" [filter]="true" [(ngModel)]="policy.sector"
+                    #Fsectors="ngModel" placeholder="Select .." optionLabel="name" required></p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!policy.sector?.id  && (fData.submitted || Fsectors.touched || Fsectors.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div> -->
+
+        <div class="mb-4">
+            <h6>General details</h6>
+            <hr />
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Date of Commencement *</label>
+            </div>
+            <div class="col-5">
+                <p-calendar name="pdcCalender" [(ngModel)]="proposedDate" #fpdcCalender="ngModel" showButtonBar="true"
+                    dateFormat="yy-mm-dd" required [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+                    yearRange="2000:2200">
+                </p-calendar>
+
+                <p class="info-message text-danger"
+                    *ngIf="!proposedDate  && (fData.submitted || fpdcCalender.touched || fpdcCalender.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Influence *</label>
+            </div>
+            <div class="col-8">
+                <p-radioButton name="locgroupname" value="1" [(ngModel)]="policy.influence" label="National">
+                </p-radioButton>
+                <p-radioButton name="locgroupname" class="ml-4" value="2" [(ngModel)]="policy.influence"
+                    label="Provincial"></p-radioButton>
+                <p-radioButton name="locgroupname" class="ml-4" value="3" [(ngModel)]="policy.influence"
+                    label="District Level"></p-radioButton>
+                <p-radioButton name="locgroupname" class="ml-4" value="4" [(ngModel)]="policy.influence"
+                    label="Specific Locations"></p-radioButton>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Description</label>
+            </div>
+            <div class="col-5">
+                <textarea name="descriptionTA" style="width:100%;" pInputTextarea class="form-control"
+                    [(ngModel)]="policy.description" #fdescription="ngModel" [rows]="5" [cols]="30"
+                    maxlength="2500"></textarea>
+                    <p class="info-message text-danger"
+                    *ngIf="fdescription.invalid  && (fData.submitted || fdescription.touched || fdescription.dirty)">
+                    Max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Data Source *</label>
+            </div>
+            <div class="col-5">
+                <p-dropdown name="formulationInstitution" [options]="institutionList" [filter]="true" #fpfi="ngModel"
+                    placeholder="Select .." optionLabel="name" [(ngModel)]="policy.formulationInstitution"
+                    [showClear]="true">
+                </p-dropdown>
+                <p class="info-message text-danger"
+                    *ngIf="!policy.formulationInstitution  && (fData.submitted || fpfi.touched || fpfi.dirty)">
+                    This is a mandatory field</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start align-content-center flex-wrap mb-15">
+            <div class="col-3 d-flex align-items-center">
+                <label class="font-weight-bold">Original Formulation Institution *</label>
+            </div>
+            <div class="col-5">
+                <input type="text" name="ofInstut" class="form-control"
+                    [(ngModel)]="policy.originalFormulationInstitution" #ofi="ngModel"
+                    placeholder="Enter Original Formulation Institution" required [pattern]="'^[a-zA-Z0-9  ,-.]{1,256}$'"  />
+                    <p class="info-message text-danger"
+                    *ngIf="ofi.invalid  && (fData.submitted || ofi.touched || ofi.dirty)">
+                    This is a mandatory field, max length is limited to 256 and can only contains Alpha-Numeric, Coma, Hyphen and Decimal point.</p>
+            </div>
+        </div>
+
+
+
+        <div class="mb-4">
+            <h6>Policy Documents</h6>
+            <hr />
+            <div>
+                <p class="info-message text-warning offset-2 col-4" *ngIf="isNew">
+                    Document upload will enable after first Save.</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap">
+            <div class="col-12 d-flex align-items-center">
+                <app-document-upload [doucmentList]="documentList" [documentOwner]="documentsDocumentOwner"
+                    [documentOwnerId]="documentsDocumentOwnerId" [documentOwnerId]="policyId" [isNew]="isNew"
+                    [showDeleteButton]="true">
+                </app-document-upload>
+            </div>
+        </div>
+
+        <div>
+            <p class="info-message text-danger offset-2 col-4"
+                *ngIf="(fData.submitted && !fData.valid) || !isvalidCCdSector">
+                One or more mandatory fields should be filled before save action.</p>
+        </div>
+        <div class="d-flex justify-content-start align-content-center flex-wrap mt-4">
+            <div class="col-3 d-flex justify-content-start">
+                <button class="btn btn-secondary btn-block text-uppercase col-3" (click)="onBackClick()">Back</button>
+
+            </div>
+            <div class="col-5 d-flex justify-content-end">
+                <div class="col-4 d-flex justify-content-end p-button-vertical">
+                    <button class="btn bg-success btn-block text-uppercase" type="button" (click)="onApproveClick()"
+                        *ngIf="!isNew && policy.isPendingApprove == true && loginUser?.userType.id == 1">Approve</button>
+                </div>
+                <div class="col-4 d-flex justify-content-end p-button-vertical">
+                    <button class="btn btn-warning btn-block text-uppercase" type="button" (click)="onDeleteClick()"
+                        *ngIf="!isNew">Delete</button>
+                </div>
+                <div class="col-6 d-flex">
+                    <button [disabled]="isSaving" class="btn btn-primary btn-block text-uppercase btn-lg"
+                        type="submit">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<app-alert [alertHeader]="alertHeader" [alertBody]="alertBody" [showAlert]="showAlert" [alertType]="alerttype"
+    (alertClose)="showAlert = false">
+</app-alert>
